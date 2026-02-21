@@ -1,0 +1,6 @@
+name = "UAPI"
+license = "MIT"
+licenselink = ""
+description = "Custom corporate theme for UAP Investigations"
+homepage = "https://uapinvestigations.com"
+min_version = "0.100.0"

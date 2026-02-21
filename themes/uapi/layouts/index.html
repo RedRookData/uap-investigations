@@ -1,0 +1,77 @@
+{{ define "main" }}
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Intelligence-Grade Research</div>
+      <h1 class="hero-title">The UAP Record,<br>Indexed &amp; Analyzed</h1>
+      <p class="hero-desc">Primary source research into Unidentified Aerial Phenomena. We index government disclosures, FOIA releases, congressional testimony, and declassified documents — then analyze what they actually say.</p>
+      <div class="hero-actions">
+        <a href="/newsletter/" class="btn btn-primary">Subscribe to The Brief</a>
+        <a href="/cases/" class="btn btn-secondary">Browse Cases</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-number">142+</div>
+        <div class="stat-label">Cases Indexed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">800+</div>
+        <div class="stat-label">Documents</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Primary Sources</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">0</div>
+        <div class="stat-label">Anonymous Claims</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="home-content">
+  <div class="home-content-inner">
+    <div class="home-section">
+      <div class="section-header">
+        <h2 class="section-title">Latest Analysis</h2>
+        <a href="/posts/" class="section-link">View all →</a>
+      </div>
+      <div class="card-grid">
+        {{ range first 3 (where .Site.RegularPages "Section" "posts") }}
+        <article class="card">
+          <div class="card-meta">
+            <span class="card-category">Analysis</span>
+            <span class="card-date">{{ .Date.Format "Jan 2, 2006" }}</span>
+          </div>
+          <h3 class="card-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+          <p class="card-excerpt">{{ .Summary | truncate 120 }}</p>
+          <a href="{{ .Permalink }}" class="card-readmore">Read more →</a>
+        </article>
+        {{ end }}
+      </div>
+    </div>
+
+    <div class="home-section">
+      <div class="section-header">
+        <h2 class="section-title">Recent Cases</h2>
+        <a href="/cases/" class="section-link">View all →</a>
+      </div>
+      <div class="card-grid">
+        {{ range first 3 (where .Site.RegularPages "Section" "cases") }}
+        <article class="card">
+          <div class="card-meta">
+            <span class="card-category badge-declassified">Case File</span>
+            <span class="card-date">{{ .Date.Format "Jan 2, 2006" }}</span>
+          </div>
+          <h3 class="card-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+          <p class="card-excerpt">{{ .Summary | truncate 120 }}</p>
+          <a href="{{ .Permalink }}" class="card-readmore">Read more →</a>
+        </article>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}

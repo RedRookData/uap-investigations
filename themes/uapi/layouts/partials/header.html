@@ -1,0 +1,15 @@
+<header class="site-header">
+  <nav class="nav-inner">
+    <div class="nav-logo">
+      <a href="{{ site.BaseURL }}">
+        <img src="/logo.png" alt="{{ site.Title }}" class="logo-img">
+      </a>
+    </div>
+    <ul class="nav-links">
+      {{ range site.Menus.main }}
+      <li><a href="{{ .URL }}" {{ if eq $.RelPermalink .URL }}class="active"{{ end }}>{{ .Name }}</a></li>
+      {{ end }}
+    </ul>
+    <button class="nav-mobile-toggle" aria-label="Menu">&#9776;</button>
+  </nav>
+</header>
