@@ -1,29 +1,44 @@
 <footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-col">
-      <img src="/logo.png" alt="{{ site.Title }}" class="footer-logo">
-      <p class="footer-tagline">Primary source research into Unidentified Aerial Phenomena. No speculation. Just the record.</p>
+  <div class="container">
+    <div class="footer-grid">
+
+      <!-- Col 1: Logo + description + legal -->
+      <div class="footer-col">
+        <img src="/logo.png" alt="{{ site.Title }}" class="footer-logo-img">
+        <p class="footer-desc">Primary source research into Unidentified Aerial Phenomena. Government disclosures, FOIA releases, and congressional records — indexed and analyzed.</p>
+        <div class="footer-legal">
+          <a href="/about/">About</a>
+          <a href="/newsletter/">Newsletter</a>
+        </div>
+      </div>
+
+      <!-- Col 2: Navigation -->
+      <div class="footer-col">
+        <h3 class="footer-col-title">Navigation</h3>
+        <nav class="footer-nav">
+          <ul>
+            {{- range site.Menus.main }}
+            <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+            {{- end }}
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Col 3: Newsletter -->
+      <div class="footer-col">
+        <h3 class="footer-col-title">Stay Informed</h3>
+        <p class="footer-newsletter-text">New disclosures, case updates, and analysis delivered to your inbox. No speculation — just the record.</p>
+        <form class="footer-form" action="/newsletter/" method="get">
+          <input type="email" class="footer-input" placeholder="your@email.com" aria-label="Email address">
+          <button type="submit" class="footer-btn">Subscribe</button>
+        </form>
+      </div>
+
     </div>
-    <div class="footer-col">
-      <h4 class="footer-heading">Navigate</h4>
-      <ul class="footer-links">
-        {{ range site.Menus.main }}
-        <li><a href="{{ .URL }}">{{ .Name }}</a></li>
-        {{ end }}
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4 class="footer-heading">The Investigation Brief</h4>
-      <p class="footer-newsletter-text">Weekly digest of UAP disclosures, document releases, and primary source analysis.</p>
-      <a href="/newsletter/" class="footer-subscribe-btn">Subscribe</a>
-    </div>
-    <div class="footer-col">
-      <h4 class="footer-heading">Legal</h4>
-      <ul class="footer-links">
-        <li><a href="/about/">About</a></li>
-        <li><a href="/index.xml">RSS Feed</a></li>
-      </ul>
-      <p class="footer-copy">&copy; {{ now.Year }} UAP Investigations</p>
+
+    <div class="footer-bottom">
+      <span>&copy; {{ now.Format "2006" }} {{ site.Title }}. All rights reserved.</span>
+      <span>Built on primary sources.</span>
     </div>
   </div>
 </footer>

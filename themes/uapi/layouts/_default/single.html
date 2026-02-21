@@ -1,48 +1,48 @@
 {{ define "main" }}
-<div class="article-container">
-  <div class="article-header">
-    <div class="breadcrumb">
-      <a href="/">Home</a> /
-      {{ with .CurrentSection }}<a href="{{ .Permalink }}">{{ .Title }}</a>{{ end }} /
-      {{ .Title }}
-    </div>
-    {{ with .Params.categories }}
-    <div class="article-cats">
-      {{ range . }}<span class="card-category">{{ . }}</span>{{ end }}
-    </div>
-    {{ end }}
-    <h1 class="article-title">{{ .Title }}</h1>
-    <div class="article-meta">
-      <span class="meta-date">{{ .Date.Format "January 2, 2006" }}</span>
-      <span class="meta-sep">·</span>
-      <span class="meta-time">{{ .ReadingTime }} min read</span>
-      {{ with .Params.tags }}
-      <span class="meta-sep">·</span>
-      {{ range first 3 . }}<a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>{{ end }}
-      {{ end }}
-    </div>
-    {{ with .Description }}<p class="article-desc">{{ . }}</p>{{ end }}
-  </div>
+<div class="article-page">
+  <div class="container">
+    <article class="article">
 
-  <div class="article-body">
-    {{ .Content }}
-  </div>
+      <header class="article-header">
+        {{- with .Params.categories }}
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">›</span>
+          {{- range . }}
+          <a href="/categories/{{ . | urlize }}/">{{ . }}</a>
+          {{- end }}
+        </nav>
+        {{- end }}
 
-  <div class="article-footer">
-    <div class="article-nav">
-      {{ with .PrevInSection }}
-      <a href="{{ .Permalink }}" class="article-nav-link prev">
-        <span class="nav-label">← Previous</span>
-        <span class="nav-title">{{ .Title }}</span>
-      </a>
-      {{ end }}
-      {{ with .NextInSection }}
-      <a href="{{ .Permalink }}" class="article-nav-link next">
-        <span class="nav-label">Next →</span>
-        <span class="nav-title">{{ .Title }}</span>
-      </a>
-      {{ end }}
-    </div>
+        <h1 class="article-title">{{ .Title }}</h1>
+
+        <div class="article-meta">
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+          {{- if .ReadingTime }}<span>{{ .ReadingTime }} min read</span>{{- end }}
+          {{- with .Params.source }}
+          <span class="source-badge">{{ . }}</span>
+          {{- end }}
+          {{- with .Params.status }}
+          <span class="status-badge status-{{ . | lower | replaceRE " " "-" }}">{{ . }}</span>
+          {{- end }}
+        </div>
+      </header>
+
+      <div class="article-content">
+        {{ .Content }}
+      </div>
+
+      {{- with .Params.tags }}
+      <footer class="article-footer">
+        <div class="article-tags">
+          {{- range . }}
+          <a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>
+          {{- end }}
+        </div>
+      </footer>
+      {{- end }}
+
+    </article>
   </div>
 </div>
 {{ end }}

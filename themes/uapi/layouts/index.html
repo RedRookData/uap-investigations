@@ -1,77 +1,126 @@
 {{ define "main" }}
+
+<!-- Hero -->
 <section class="hero">
-  <div class="hero-inner">
-    <div class="hero-text">
-      <div class="hero-eyebrow">Intelligence-Grade Research</div>
-      <h1 class="hero-title">The UAP Record,<br>Indexed &amp; Analyzed</h1>
-      <p class="hero-desc">Primary source research into Unidentified Aerial Phenomena. We index government disclosures, FOIA releases, congressional testimony, and declassified documents — then analyze what they actually say.</p>
-      <div class="hero-actions">
-        <a href="/newsletter/" class="btn btn-primary">Subscribe to The Brief</a>
-        <a href="/cases/" class="btn btn-secondary">Browse Cases</a>
+  <div class="container">
+    <div class="hero-inner">
+
+      <div class="hero-left">
+        <div class="hero-label">UAP Research Platform</div>
+        <h1 class="hero-title">Primary Source<br>UAP Research</h1>
+        <p class="hero-description">
+          We index government disclosures, FOIA releases, congressional testimony, and declassified documents — then analyze what they actually say. No speculation. No sensationalism. Just the record.
+        </p>
+        <div class="hero-actions">
+          <a href="/newsletter/" class="btn btn-primary">Subscribe</a>
+          <a href="/cases/" class="btn btn-secondary">Browse Cases</a>
+        </div>
       </div>
-    </div>
-    <div class="hero-stats">
-      <div class="stat-card">
-        <div class="stat-number">142+</div>
-        <div class="stat-label">Cases Indexed</div>
+
+      <div class="hero-right">
+        <div class="stat-card">
+          <div class="stat-number">847</div>
+          <div class="stat-label">Documents Indexed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">142</div>
+          <div class="stat-label">Cases Tracked</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">12</div>
+          <div class="stat-label">Official Reports</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number">800+</div>
-        <div class="stat-label">Documents</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">100%</div>
-        <div class="stat-label">Primary Sources</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">0</div>
-        <div class="stat-label">Anonymous Claims</div>
-      </div>
+
     </div>
   </div>
 </section>
 
-<section class="home-content">
-  <div class="home-content-inner">
-    <div class="home-section">
-      <div class="section-header">
+<!-- Content grid -->
+<section class="content-section">
+  <div class="container">
+    <div class="content-grid">
+
+      <!-- Latest Analysis -->
+      <div class="content-column">
         <h2 class="section-title">Latest Analysis</h2>
-        <a href="/posts/" class="section-link">View all →</a>
+        {{- $posts := where site.RegularPages "Section" "posts" }}
+        {{- if $posts }}
+          {{- range first 3 $posts }}
+          <article class="card">
+            {{- with .Params.categories }}
+            <div class="card-category">{{ index . 0 }}</div>
+            {{- end }}
+            <h3 class="card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+            <div class="card-meta">
+              <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+              {{- if .ReadingTime }}<span>{{ .ReadingTime }} min</span>{{- end }}
+            </div>
+            {{- with .Summary }}
+            <p class="card-excerpt">{{ . | plainify | truncate 120 }}</p>
+            {{- end }}
+            <a href="{{ .RelPermalink }}" class="card-link">Read more →</a>
+          </article>
+          {{- end }}
+        {{- else }}
+        <div class="card">
+          <p class="card-excerpt">Analysis posts will appear here as they are published.</p>
+          <a href="/posts/" class="card-link">View all posts →</a>
+        </div>
+        {{- end }}
       </div>
-      <div class="card-grid">
-        {{ range first 3 (where .Site.RegularPages "Section" "posts") }}
-        <article class="card">
-          <div class="card-meta">
-            <span class="card-category">Analysis</span>
-            <span class="card-date">{{ .Date.Format "Jan 2, 2006" }}</span>
-          </div>
-          <h3 class="card-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
-          <p class="card-excerpt">{{ .Summary | truncate 120 }}</p>
-          <a href="{{ .Permalink }}" class="card-readmore">Read more →</a>
-        </article>
-        {{ end }}
-      </div>
-    </div>
 
-    <div class="home-section">
-      <div class="section-header">
+      <!-- Recent Cases -->
+      <div class="content-column">
         <h2 class="section-title">Recent Cases</h2>
-        <a href="/cases/" class="section-link">View all →</a>
+        {{- $cases := where site.RegularPages "Section" "cases" }}
+        {{- if $cases }}
+          {{- range first 3 $cases }}
+          <article class="card">
+            {{- with .Params.categories }}
+            <div class="card-category">{{ index . 0 }}</div>
+            {{- end }}
+            <h3 class="card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+            <div class="card-meta">
+              <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+              {{- with .Params.status }}
+              <span class="status-badge status-{{ . | lower | replaceRE " " "-" }}">{{ . }}</span>
+              {{- end }}
+            </div>
+            {{- with .Summary }}
+            <p class="card-excerpt">{{ . | plainify | truncate 120 }}</p>
+            {{- end }}
+            <a href="{{ .RelPermalink }}" class="card-link">View case →</a>
+          </article>
+          {{- end }}
+        {{- else }}
+        <div class="card">
+          <p class="card-excerpt">Case files will appear here as they are added.</p>
+          <a href="/cases/" class="card-link">Browse all cases →</a>
+        </div>
+        {{- end }}
       </div>
-      <div class="card-grid">
-        {{ range first 3 (where .Site.RegularPages "Section" "cases") }}
-        <article class="card">
-          <div class="card-meta">
-            <span class="card-category badge-declassified">Case File</span>
-            <span class="card-date">{{ .Date.Format "Jan 2, 2006" }}</span>
-          </div>
-          <h3 class="card-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
-          <p class="card-excerpt">{{ .Summary | truncate 120 }}</p>
-          <a href="{{ .Permalink }}" class="card-readmore">Read more →</a>
-        </article>
-        {{ end }}
+
+      <!-- Resources -->
+      <div class="content-column">
+        <h2 class="section-title">Resources</h2>
+        <div class="card">
+          <div class="card-category">Official Report</div>
+          <h3 class="card-title"><a href="/reports/">AARO Historical Record</a></h3>
+          <div class="card-meta"><time>2024</time></div>
+          <p class="card-excerpt">All-domain Anomaly Resolution Office historical record of U.S. government involvement with UAP programs.</p>
+          <a href="/reports/" class="card-link">View reports →</a>
+        </div>
+        <div class="card">
+          <div class="card-category">Document Library</div>
+          <h3 class="card-title"><a href="/documents/">Primary Documents</a></h3>
+          <p class="card-excerpt">Browse declassified documents, FOIA releases, and congressional records indexed for research.</p>
+          <a href="/documents/" class="card-link">Browse documents →</a>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
+
 {{ end }}

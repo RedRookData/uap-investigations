@@ -1,34 +1,57 @@
 {{ define "main" }}
-<div class="page-container">
-  <div class="page-header">
-    <div class="breadcrumb"><a href="/">Home</a> / {{ .Title }}</div>
-    <h1 class="page-title">{{ .Title }}</h1>
-    {{ with .Content }}<div class="page-desc">{{ . }}</div>{{ end }}
-  </div>
+<div class="list-page">
+  <div class="container">
 
-  <div class="list-container">
-    {{ range .Pages }}
-    <article class="list-card">
-      <div class="list-card-meta">
-        {{ with .Params.categories }}
-          {{ range first 1 . }}<span class="card-category">{{ . }}</span>{{ end }}
-        {{ end }}
-        <span class="card-date">{{ .Date.Format "January 2, 2006" }}</span>
-        <span class="read-time">{{ .ReadingTime }} min read</span>
-      </div>
-      <h2 class="list-card-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
-      {{ with .Description }}<p class="list-card-desc">{{ . }}</p>{{ else }}<p class="list-card-desc">{{ .Summary | truncate 160 }}</p>{{ end }}
-      {{ with .Params.tags }}
-      <div class="list-card-tags">
-        {{ range first 4 . }}<a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>{{ end }}
-      </div>
-      {{ end }}
-    </article>
-    {{ else }}
-    <p class="empty-state">No content yet. Check back soon.</p>
-    {{ end }}
-  </div>
+    <div class="list-header">
+      <h1 class="list-title">{{ .Title }}</h1>
+      {{- with .Content }}
+      <div class="list-description">{{ . }}</div>
+      {{- end }}
+    </div>
 
-  {{ template "_internal/pagination.html" . }}
+    {{- $paginator := .Paginate .Pages }}
+    <div class="card-grid">
+      {{- range $paginator.Pages }}
+      <article class="card">
+        {{- with .Params.categories }}
+        <div class="card-category">{{ index . 0 }}</div>
+        {{- end }}
+        <h2 class="card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+        <div class="card-meta">
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+          {{- if .ReadingTime }}<span>{{ .ReadingTime }} min read</span>{{- end }}
+          {{- with .Params.status }}
+          <span class="status-badge status-{{ . | lower | replaceRE " " "-" }}">{{ . }}</span>
+          {{- end }}
+        </div>
+        {{- with .Summary }}
+        <p class="card-excerpt">{{ . | plainify | truncate 140 }}</p>
+        {{- end }}
+        <a href="{{ .RelPermalink }}" class="card-link">Read more →</a>
+      </article>
+      {{- end }}
+    </div>
+
+    {{- with $paginator }}
+    {{- if gt .TotalPages 1 }}
+    <nav class="pagination" aria-label="Pagination">
+      {{- if .HasPrev }}
+      <a href="{{ .Prev.URL }}" class="page-link" aria-label="Previous page">← Prev</a>
+      {{- end }}
+      {{- range .Pagers }}
+      {{- if eq . $paginator }}
+      <span class="page-link active" aria-current="page">{{ .PageNumber }}</span>
+      {{- else }}
+      <a href="{{ .URL }}" class="page-link">{{ .PageNumber }}</a>
+      {{- end }}
+      {{- end }}
+      {{- if .HasNext }}
+      <a href="{{ .Next.URL }}" class="page-link" aria-label="Next page">Next →</a>
+      {{- end }}
+    </nav>
+    {{- end }}
+    {{- end }}
+
+  </div>
 </div>
 {{ end }}

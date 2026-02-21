@@ -1,6 +1,7 @@
 name = "UAPI"
 license = "MIT"
-licenselink = ""
-description = "Custom corporate theme for UAP Investigations"
+licenselink = "https://opensource.org/licenses/MIT"
+description = "Custom theme for UAP Investigations — a serious investigative research platform."
 homepage = "https://uapinvestigations.com"
-min_version = "0.100.0"
+tags = ["research", "professional", "corporate"]
+min_version = "0.120.0"

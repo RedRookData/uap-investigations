@@ -1,18 +1,14 @@
 <!DOCTYPE html>
-<html lang="{{ site.Language.LanguageCode | default "en" }}">
+<html lang="{{ site.Language.Lang | default "en" }}" dir="{{ site.Language.LanguageDirection | default "ltr" }}">
 <head>
-  {{ partial "head.html" . }}
+  {{- partial "head.html" . -}}
 </head>
 <body>
-  {{ partial "header.html" . }}
-  <main class="site-main">
-    {{ block "main" . }}{{ end }}
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  {{- partial "header.html" . -}}
+  <main id="main-content">
+    {{- block "main" . }}{{- end }}
   </main>
-  {{ partial "footer.html" . }}
-  <script>
-    const toggle = document.querySelector('.nav-mobile-toggle');
-    const links = document.querySelector('.nav-links');
-    if (toggle) toggle.addEventListener('click', () => links.classList.toggle('open'));
-  </script>
+  {{- partial "footer.html" . -}}
 </body>
 </html>
