@@ -46,6 +46,27 @@ Work directly on the droplet during build (SSH + file edit) OR build locally in 
 
 ---
 
+## ⚠️ STRATEGIC REVISION — Build Sequence (Post Logic/Strategy Vetting)
+
+Original sequence had Library + Researchers (Stage 5) before Conversion Mechanics (Stage 6). This is inverted priority -- nothing in Library/Researchers drives revenue. Conversion mechanics are on the critical path to first subscriber. Revised sequence:
+
+| Stage | Build | Why this order |
+|-------|-------|----------------|
+| 1 | Core Shell | Everything depends on this |
+| 2 | Cards + Badge System | Homepage and article depend on cards |
+| 3 | Homepage + Article | First deployable content view |
+| 4 | Section Archives | Reports paywall is monetization critical path |
+| **5** | **Conversion Mechanics** | **Moved up -- newsletter, tier prompts, report preview, search trigger. Critical path to revenue.** |
+| **6** | **Search (Algolia + gate)** | **Moved up -- search gate is primary free signup acquisition driver** |
+| **7** | **Library (simplified)** | **Moved down + simplified -- static grid only, no JS filter at launch** |
+| **8** | **Researchers** | **Moved down -- deprioritized, build when conversion is proven** |
+| 9 | Responsive + Polish | Pre-deploy |
+| 10 | Deploy + Seed | Go live |
+
+**Library simplification:** Phase 1 = static grid with simple category heading sections. No JS filter. JS filter added in Phase 2 when library exceeds 50 items. This saves 4+ hours of build time with zero impact on launch value.
+
+---
+
 ## Critical Ghost 6.x Rules (Read Once, Burn In)
 
 1. **Always `{{ghost_head}}` and `{{ghost_foot}}`** in default.hbs. Ghost injects Portal, analytics, and member scripts there. Missing these breaks auth.
@@ -595,6 +616,14 @@ For article (post.hbs), also add:
 .card--closed   { border-left-color: var(--c-closed) !important; }
 .card--cold     { border-left-color: var(--c-cold) !important; }
 .card--pending  { border-left-color: var(--c-pending) !important; }
+
+/* ── Empty badge container fix (Strategy Patch) ── */
+/* If a post has no classification tag, stamp div is empty — collapse it */
+.card__stamp:empty,
+.article__stamp:empty,
+.card__badges:empty,
+.article__badges:empty,
+.article__context-tags:empty { display: none; }
 ```
 
 ### `partials/card-case.hbs`
@@ -635,7 +664,8 @@ NOTE: The `@number` helper gives a sequential number within a `{{foreach}}` loop
 
 Revised card ID line:
 ```handlebars
-<span class="card__id">{{#if @custom.case_id}}{{@custom.case_id}}{{else}}UAPI-{{date format="YYYY-MM-DD"}}{{/if}}</span>
+{{! Strategy patch: date fallback produces duplicates if 2 posts on same day. Use slug instead. }}
+<span class="card__id">{{#if @custom.case_id}}{{@custom.case_id}}{{else}}UAPI-{{slug}}{{/if}}</span>
 ```
 
 ### `assets/css/cards.css` — key rules
@@ -736,7 +766,8 @@ Revised card ID line:
 ```handlebars
 {{!< default}}
 
-{{> "newcomer-block"}}
+{{! Strategy patch: logged-in members are never newcomers — skip orientation block regardless of localStorage }}
+{{#unless @member}}{{> "newcomer-block"}}{{/unless}}
 
 <div class="home-sections">
 
@@ -797,7 +828,7 @@ NOTE: `{{!< default}}` declares which layout template to use.
 
     <header class="article__header">
       <div class="article__meta">
-        <span class="article__id">{{#if @custom.case_id}}{{@custom.case_id}}{{else}}UAPI-{{date format="YYYY-MM-DD"}}{{/if}}</span>
+        <span class="article__id">{{#if @custom.case_id}}{{@custom.case_id}}{{else}}UAPI-{{slug}}{{/if}}</span>
         <span class="article__date">FILED {{date format="DD MMM YYYY"}}</span>
         <span class="article__reading-time">{{reading_time}}</span>
       </div>
@@ -1082,19 +1113,44 @@ NOTE: `data-members-form="subscribe"` is Ghost's native subscribe form attribute
 
 ### `partials/report-preview.hbs`
 ```handlebars
+{{! Strategy patch: frequency cap via JS. Full preview on first article per session,
+    compact one-liner on subsequent articles. Prevents CTA blindness. }}
 {{#get "posts" filter="tag:reports" limit="1"}}
   {{#foreach posts}}
-  <div class="report-preview">
-    <div class="report-preview__label">LATEST REPORT — INVESTIGATOR ACCESS</div>
-    <h3 class="report-preview__title"><a href="{{url}}">{{title}}</a></h3>
-    <p class="report-preview__excerpt">{{excerpt words="30"}}</p>
-    <div class="report-preview__cta">
-      <a href="#/portal/signup" data-portal="signup" class="btn btn--subscribe">SUBSCRIBE — $20/MO</a>
-      <a href="{{url}}" class="report-preview__purchase">or purchase this report — $18</a>
+  <div class="report-preview" data-report-url="{{url}}" data-report-title="{{title}}">
+    {{! JS fills in full vs compact version based on sessionStorage counter }}
+    <div class="report-preview__full">
+      <div class="report-preview__label">LATEST REPORT — INVESTIGATOR ACCESS</div>
+      <h3 class="report-preview__title"><a href="{{url}}">{{title}}</a></h3>
+      <p class="report-preview__excerpt">{{excerpt words="30"}}</p>
+      <div class="report-preview__cta">
+        <a href="#/portal/signup" data-portal="signup" class="btn btn--subscribe">SUBSCRIBE — $20/MO</a>
+        <a href="{{url}}" class="report-preview__purchase">or purchase this report — $18</a>
+      </div>
+    </div>
+    <div class="report-preview__compact" style="display:none">
+      <span class="report-preview__compact-label">LATEST REPORT:</span>
+      <a href="{{url}}" class="report-preview__compact-link">{{title}}</a>
+      <a href="#/portal/signup" data-portal="signup" class="report-preview__compact-cta">→ Investigator access</a>
     </div>
   </div>
   {{/foreach}}
 {{/get}}
+```
+
+Add to `badges.js` (or a separate `conversion.js`):
+```javascript
+// Report preview frequency cap
+var previewEl = document.querySelector('.report-preview');
+if (previewEl) {
+  var seen = parseInt(sessionStorage.getItem('uapi-report-preview-seen') || '0', 10);
+  if (seen >= 1) {
+    // Show compact version only
+    previewEl.querySelector('.report-preview__full').style.display = 'none';
+    previewEl.querySelector('.report-preview__compact').style.display = '';
+  }
+  sessionStorage.setItem('uapi-report-preview-seen', String(seen + 1));
+}
 ```
 
 ### `partials/cross-index.hbs`
@@ -1149,7 +1205,9 @@ NOTE: The `filter="slug:-{{slug}}"` syntax excludes the current post. Filter com
       <div class="search-gate__label">DATABASE ACCESS</div>
       <h2 class="search-gate__headline">Search the UAPI database.</h2>
       <p class="search-gate__sub">A free account gives you full faceted search across all cases, reports, dispatches, and the library.</p>
-      <a href="#/portal/signup" data-portal="signup" class="btn btn--subscribe search-gate__cta">CREATE FREE ACCOUNT</a>
+      {{! onclick sets sessionStorage flag so search re-opens after Portal auth + page reload }}
+    <a href="#/portal/signup" data-portal="signup" class="btn btn--subscribe search-gate__cta"
+      onclick="sessionStorage.setItem('uapi-search-intent','1')">CREATE FREE ACCOUNT</a>
       <p class="search-gate__signin">Already have an account? <a href="#/portal/signin" data-portal="signin">Sign in</a></p>
     </div>
     {{/if}}
@@ -1195,6 +1253,36 @@ NOTE: The `filter="slug:-{{slug}}"` syntax excludes the current post. Filter com
       closeSearch();
     }
   });
+
+  // Strategy patch: after Portal signup completes, re-open search automatically
+  // User signed up specifically to search — don't leave them stranded
+  // Ghost Portal fires 'ghost:signin' custom event on the window after successful auth
+  window.addEventListener('ghost:signin', function() {
+    // Small delay to let Portal close cleanly before search opens
+    setTimeout(function() {
+      if (!overlay.classList.contains('is-open')) {
+        overlay.removeAttribute('aria-hidden');
+        overlay.classList.add('is-open');
+        // Init Algolia now that user is authenticated (page will have reloaded with member session)
+        // Note: page may reload on auth — if so, this fires after reload on the already-open state
+      }
+    }, 400);
+  });
+
+  // Fallback: if Ghost reloads page after signin, check sessionStorage flag
+  // Set flag before Portal opens, re-open search after reload if flag present
+  if (sessionStorage.getItem('uapi-search-intent')) {
+    sessionStorage.removeItem('uapi-search-intent');
+    // User was in search flow before login — re-open search
+    setTimeout(function() {
+      overlay.removeAttribute('aria-hidden');
+      overlay.classList.add('is-open');
+      if (typeof algoliasearch !== 'undefined' && !window._algoliaInit) {
+        initAlgolia();
+        window._algoliaInit = true;
+      }
+    }, 600);
+  }
 
   function closeSearch() {
     overlay.setAttribute('aria-hidden', 'true');
@@ -1316,18 +1404,47 @@ unzip -l ../uapi-dossier.zip | grep package.json
 - Ghost Admin → Pages → Library page → Settings → Template → "Library"
 - Repeat for Researchers, Reports, Dispatches pages
 
+### Pre-deploy Ghost Admin checklist (STRATEGY PATCH — these were missing, all are hard blockers)
+
+**Ghost Newsletter (must configure before subscribe form works):**
+- [ ] Ghost Admin → Newsletters → Create newsletter
+- [ ] Set newsletter name: "UAPI Field Dispatches"
+- [ ] Set sender name: "UAP Investigations"
+- [ ] Set sender email: flyswatterghost@gmail.com
+- [ ] Set reply-to: flyswatterghost@gmail.com
+
+**Stripe (must connect before any paywall testing works):**
+- [ ] Ghost Admin → Settings → Members → Connect Stripe
+- [ ] Verify Supporter ($5/mo, $50/yr) tier created
+- [ ] Verify Investigator ($20/mo, $200/yr) tier created
+- [ ] Verify Clearance ($35/mo founding, $350/yr founding) tier created as waitlist
+- [ ] Verify annual plans are configured for all tiers
+
+**Report post access (must set on each Report post — Ghost Admin per-post setting):**
+- [ ] Open each Report post → Settings → Visibility → Specific tiers → Investigator + Clearance
+- [ ] Verify each Report has `<!--members-only-->` HTML card after intro paragraph
+- [ ] **⚠️ CONTENT OPS WARNING:** `<!--members-only-->` MUST appear in every Report. Without it, the entire report is publicly visible regardless of Visibility setting. Place it after the first 2-3 paragraphs (the hook). Add via Ghost editor → Insert card → HTML → paste `<!--members-only-->`.
+
+**Algolia index (must be seeded before launch or search returns empty results):**
+- [ ] Run one-shot index script: `node /path/to/index-ghost-to-algolia.js` on droplet
+- [ ] Verify Algolia dashboard shows records equal to published post count
+- [ ] Test search in overlay returns results (log in, open search, type a known keyword)
+
 ### Post-deploy checks
 - [ ] Classification bar renders
-- [ ] Nav links correct
+- [ ] Nav links correct (configured in Ghost Admin → Navigation)
 - [ ] Fonts loading (check network tab)
 - [ ] One test Case post: all badge types render correctly
-- [ ] `badges.js` applying status class to card
-- [ ] Search trigger: logged-out → gate modal, logged-in → Algolia
-- [ ] Report paywall: Investigator sees content, free member sees tier prompt
-- [ ] Library filters working
+- [ ] `badges.js` applying status class to card wrapper
+- [ ] Empty badge containers collapse (`.card__stamp:empty` → display:none)
+- [ ] Search trigger: logged-out → gate modal → signup → sessionStorage flag set → page reload → search auto-opens
+- [ ] Search trigger: logged-in → Algolia overlay → results render
+- [ ] Report paywall: Investigator sees content, free member sees tier prompt, **Supporter sees tier prompt** (not content)
+- [ ] Library: static grid renders by category
 - [ ] Researchers directory rendering
-- [ ] Newsletter CTA form submitting to Ghost
-- [ ] Report preview showing on Case articles
+- [ ] Newsletter CTA form submits, Ghost confirms subscription
+- [ ] Report preview: full version on first Case article, compact on second
+- [ ] Newcomer block: visible to logged-out, hidden to logged-in members
 - [ ] Footer document stamp rendering
 - [ ] Responsive: check 375px, 768px, 1024px, 1440px
 
@@ -1407,4 +1524,16 @@ Collisions=5 Tribunal=11. All passed. Badge JS post-processing noted as architec
 
 All 11: PASS. Build is clean.
 
-Vetting Log: Pass1 Collisions=5 Tribunal=11 | Pass2 Bugs=8 Fixed=8 Tribunal=11 | Polish=pass | Status: READY TO BUILD
+Vetting Log: Pass1 Collisions=5 Tribunal=11 | Pass2 Bugs=8 Fixed=8 Tribunal=11 | Pass3 Strategy Collisions=5 Thunderdome=5 Panel=6 | Polish=pass | Status: READY TO BUILD
+
+**Pass 3 Summary (Logic + Strategy):**
+- Build sequence reordered: Conversion Mechanics and Search now Stages 5-6, Library/Researchers deprioritized to 7-8
+- Library JS filter deferred to Phase 2 (premature at launch scale)
+- Ghost native access control replaces HBS tier checks (simpler, verified)
+- CSS :empty fix added for badge containers
+- Case ID fallback changed from date (duplicates) to slug (unique)
+- Newcomer block now hides for logged-in members regardless of localStorage
+- Report preview frequency cap added (full on first view, compact on repeat)
+- Post-signup search dead-end fixed (sessionStorage flag + Portal event listener)
+- Deploy checklist patched with 4 previously missing hard blockers: Ghost Newsletter config, Stripe connection, Report post access settings, Algolia index seeding
+- <!--members-only--> content ops warning documented explicitly
