@@ -1,4 +1,4 @@
-# UAPI Theme — Implementation Plan (Self-Directed Build Reference)
+# UAPI Theme - Implementation Plan (Self-Directed Build Reference)
 _All decisions pre-made. Build is pure execution. No figuring-out during build._
 _Last updated: 2026-02-21_
 
@@ -38,7 +38,7 @@ Use Ghost webhook + server-side script on the DigitalOcean droplet:
 Configure in Ghost Admin (Settings → Members → Tiers) before testing paywalls:
 - Tier 1: `supporter` slug, $5/mo, $50/yr
 - Tier 2: `investigator` slug, $20/mo, $200/yr
-- Tier 3: `clearance` slug, $35/mo founding (set description as "Founding rate — locks permanently")
+- Tier 3: `clearance` slug, $35/mo founding (set description as "Founding rate - locks permanently")
 Stripe must be connected for paid tiers to work.
 
 ### 5. Local test environment
@@ -46,7 +46,7 @@ Work directly on the droplet during build (SSH + file edit) OR build locally in 
 
 ---
 
-## ⚠️ STRATEGIC REVISION — Build Sequence (Post Logic/Strategy Vetting)
+## ⚠️ STRATEGIC REVISION - Build Sequence (Post Logic/Strategy Vetting)
 
 Original sequence had Library + Researchers (Stage 5) before Conversion Mechanics (Stage 6). This is inverted priority -- nothing in Library/Researchers drives revenue. Conversion mechanics are on the critical path to first subscriber. Revised sequence:
 
@@ -116,50 +116,88 @@ Original sequence had Library + Researchers (Stage 5) before Conversion Mechanic
 
 ---
 
-## Design Tokens (Pre-Decided — Copy Verbatim Into tokens.css)
+## Design Tokens (Pre-Decided - Copy Verbatim Into tokens.css)
+
+**PATCH CV-002:** Self-hosted fonts precede `:root`. Copy these @font-face declarations at the TOP of tokens.css before the :root block. Font files in `assets/fonts/`.
+
+```css
+/* ── Self-hosted Fonts ───────────────────────────────────────────────────── */
+/* Download woff2 files from: https://google-webfonts-helper.herokuapp.com/  */
+/* Select "Latin" subset only. Download as woff2. Place in assets/fonts/.    */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('../fonts/ibm-plex-mono-400.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('../fonts/ibm-plex-mono-500.woff2') format('woff2');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url('../fonts/source-serif4-400.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url('../fonts/source-serif4-400italic.woff2') format('woff2');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url('../fonts/source-serif4-600.woff2') format('woff2');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url('../fonts/source-serif4-700.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+```
 
 ```css
 :root {
   /* ── Colors ────────────────────────────── */
   --c-bg:           #F4F1EA;   /* parchment background */
-  --c-surface:      #E6E2D6;   /* card surfaces — PATCHED: was #EDEAE0, too close to bg on budget screens */
-  --c-surface-deep: #DAD6CA;   /* card hover — deepened to match new surface */
-  --c-text:         #1A1A1A;   /* primary text — contrast vs bg: ~15.8:1 ✓ */
-  --c-text-2:       #4A4A4A;   /* secondary text — contrast vs bg: ~7.2:1 ✓ */
-  --c-text-3:       #696560;   /* tertiary — PATCHED: was #7A7570 (4.2:1, fails AA at 11px); now ~4.8:1 ✓ */
-  --c-accent:       #9B1C1C;   /* red accent — contrast vs bg: ~7.5:1 ✓ */
+  --c-surface:      #E6E2D6;   /* card surfaces - PATCHED: was #EDEAE0, too close to bg on budget screens */
+  --c-surface-deep: #DAD6CA;   /* card hover - deepened to match new surface */
+  --c-text:         #1A1A1A;   /* primary text - contrast vs bg: ~15.8:1 ✓ */
+  --c-text-2:       #4A4A4A;   /* secondary text - contrast vs bg: ~7.2:1 ✓ */
+  --c-text-3:       #696560;   /* tertiary - PATCHED: was #7A7570 (4.2:1, fails AA at 11px); now ~4.8:1 ✓ */
+  --c-accent:       #9B1C1C;   /* red accent - contrast vs bg: ~7.5:1 ✓ */
   --c-accent-light: #F5E8E8;   /* red tint for hover states */
   --c-accent-hover: #7A1515;   /* darker red for hover on accent elements */
-  --c-border:       #C0BBB0;   /* standard borders — slightly deepened to match new card surface */
+  --c-border:       #C0BBB0;   /* standard borders - slightly deepened to match new card surface */
   --c-border-light: #D5D1C6;   /* lighter borders */
-  --c-foia:         #2D5A27;   /* FOIA / DECLASSIFIED green — contrast vs bg: ~8.1:1 ✓ */
+  --c-foia:         #2D5A27;   /* FOIA / DECLASSIFIED green - contrast vs bg: ~8.1:1 ✓ */
   --c-cold:         #2C4A6E;   /* COLD CASE blue */
-  --c-pending:      #7A5A10;   /* PENDING amber — PATCHED: was #8B6914 (4.7:1 borderline); now ~5.2:1 ✓ */
+  --c-pending:      #7A5A10;   /* PENDING amber - PATCHED: was #8B6914 (4.7:1 borderline); now ~5.2:1 ✓ */
   --c-closed:       #4A4A4A;   /* CLOSED gray */
-  --c-badge-bg:     #DBD8CE;   /* evidence/source badge bg — adjusted for new surface */
-  --c-focus:        #9B1C1C;   /* focus ring color — same as accent for consistency */
-  --c-visited:      #6B3A3A;   /* visited link color — muted red so read content is subtly distinct */
+  --c-badge-bg:     #DBD8CE;   /* evidence/source badge bg - adjusted for new surface */
+  --c-focus:        #9B1C1C;   /* focus ring color - same as accent for consistency */
+  --c-visited:      #6B3A3A;   /* visited link color - muted red so read content is subtly distinct */
 
   /* ── Typography ─────────────────────────── */
   --f-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --f-mono:  'IBM Plex Mono', 'Courier New', Courier, monospace;
 
-  /* ── Type scale (PATCHED: removed redundant 17px stop — 16px/17px invisible difference) ── */
-  --t-xs:   0.6875rem;  /* 11px  — badge labels, classification stamps */
-  --t-sm:   0.8125rem;  /* 13px  — metadata, card footer, bylines */
-  --t-base: 1rem;       /* 16px  — UI labels, nav, buttons */
-  --t-body: 1.125rem;   /* 18px  — article body (was 17px — bumped for readability) */
-  --t-lg:   1.25rem;    /* 20px  — card titles */
-  --t-xl:   1.5rem;     /* 24px  — section headers */
-  --t-2xl:  2rem;       /* 32px  — page titles */
-  --t-3xl:  2.75rem;    /* 44px  — article headlines */
-  --t-4xl:  3.5rem;     /* 56px  — hero / homepage feature */
+  /* ── Type scale (PATCHED: removed redundant 17px stop - 16px/17px invisible difference) ── */
+  --t-xs:   0.6875rem;  /* 11px  - badge labels, classification stamps */
+  --t-sm:   0.8125rem;  /* 13px  - metadata, card footer, bylines */
+  --t-base: 1rem;       /* 16px  - UI labels, nav, buttons */
+  --t-body: 1.125rem;   /* 18px  - article body (was 17px - bumped for readability) */
+  --t-lg:   1.25rem;    /* 20px  - card titles */
+  --t-xl:   1.5rem;     /* 24px  - section headers */
+  --t-2xl:  2rem;       /* 32px  - page titles */
+  --t-3xl:  2.75rem;    /* 44px  - article headlines */
+  --t-4xl:  3.5rem;     /* 56px  - hero / homepage feature */
 
   /* ── Line heights ────────────────────────── */
   --lh-tight:  1.2;    /* headlines */
   --lh-snug:   1.4;    /* card titles, short text */
   --lh-normal: 1.6;    /* card excerpts, UI text */
-  --lh-loose:  1.75;   /* article body — optimal for serif at 18px */
+  --lh-loose:  1.75;   /* article body - optimal for serif at 18px */
 
   /* ── Spacing ────────────────────────────── */
   --sp-1:  0.25rem;
@@ -184,7 +222,7 @@ Original sequence had Library + Researchers (Stage 5) before Conversion Mechanic
   --bw:              1px;
   --radius:          0;    /* NO rounded corners. Document aesthetic. */
   --status-bar:      4px;  /* Left border on cards */
-  --status-bar-art:  6px;  /* Left border on article pages — more prominent */
+  --status-bar-art:  6px;  /* Left border on article pages - more prominent */
 
   /* ── Touch targets ────────────────────────── */
   --touch-min: 44px;   /* WCAG 2.5.5 minimum touch target size */
@@ -198,13 +236,13 @@ Original sequence had Library + Researchers (Stage 5) before Conversion Mechanic
 
 ---
 
-## Stage 1 — Core Shell
+## Stage 1 - Core Shell
 
 ### `package.json`
 ```json
 {
   "name": "uapi-dossier",
-  "description": "UAPI Dossier Theme — UAP Investigations",
+  "description": "UAPI Dossier Theme - UAP Investigations",
   "version": "1.0.0",
   "author": "UAPI",
   "engines": {
@@ -219,29 +257,41 @@ Original sequence had Library + Researchers (Stage 5) before Conversion Mechanic
       "l":  { "width": 1200 }
     },
     "custom": {
-      "library":     "custom-library",
-      "researchers": "custom-researchers",
-      "reports":     "custom-reports",
-      "dispatches":  "custom-dispatches"
+      "library":      "custom-library",
+      "researchers":  "custom-researchers",
+      "reports":      "custom-reports",
+      "dispatches":   "custom-dispatches",
+      "ai-assistant": "custom-ai"
     }
   }
 }
 ```
 
 ### `default.hbs` structure
+
+**PATCH CV-002:** Google Fonts CDN removed. Self-hosted woff2 fonts via @font-face in tokens.css.
+**PATCH CV-003:** `data-member-tier` attribute on `<html>` for CSS-driven tier badges.
+
+Font files required in `assets/fonts/` before Stage 1 test:
+- `ibm-plex-mono-400.woff2`, `ibm-plex-mono-500.woff2`
+- `source-serif4-400.woff2`, `source-serif4-400italic.woff2`, `source-serif4-600.woff2`, `source-serif4-700.woff2`
+Download: https://google-webfonts-helper.herokuapp.com/ (search each family, select Latin subset, download woff2 only)
+
 ```handlebars
 <!DOCTYPE html>
-<html lang="{{@site.locale}}"{{#if @member}} data-member="true" data-member-email="{{@member.email}}"{{/if}}>
+<html lang="{{@site.locale}}"
+  {{#if @member}} data-member="true" data-member-email="{{@member.email}}"{{/if}}
+  {{#has tier="clearance"}}data-member-tier="clearance"{{else}}{{#has tier="investigator"}}data-member-tier="investigator"{{else}}{{#has tier="supporter"}}data-member-tier="supporter"{{/has}}{{/has}}{{/has}}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{meta_title}}</title>
   <meta name="description" content="{{meta_description}}">
 
-  {{! Fonts }}
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  {{! Self-hosted fonts - no Google Fonts DNS call. Preload above-fold fonts. }}
+  <link rel="preload" href="{{asset "fonts/ibm-plex-mono-400.woff2"}}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{asset "fonts/source-serif4-400.woff2"}}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{asset "fonts/source-serif4-700.woff2"}}" as="font" type="font/woff2" crossorigin>
 
   {{! Theme CSS }}
   <link rel="stylesheet" href="{{asset "css/tokens.css"}}">
@@ -272,7 +322,7 @@ Original sequence had Library + Researchers (Stage 5) before Conversion Mechanic
   {{> "footer"}}
   {{> "search-modal"}}
 
-  {{! JS — deferred }}
+  {{! JS - deferred }}
   <script src="{{asset "js/badges.js"}}" defer></script>
   <script src="{{asset "js/library-filter.js"}}" defer></script>
   <script src="{{asset "js/search-gate.js"}}" defer></script>
@@ -304,10 +354,25 @@ Original sequence had Library + Researchers (Stage 5) before Conversion Mechanic
           <span class="search-trigger__icon">⊕</span>
           <span class="search-trigger__label">SEARCH</span>
         </button>
+        {{! PATCH CV-003/CV-004: AI button - prominent in nav actions, links to /ai-assistant.
+            Clearance members: live indicator (pulsing dot). Others: locked indicator. }}
+        {{#has tier="clearance"}}
+        <a href="/ai-assistant" class="btn btn--ai btn--ai-live" aria-label="AI Research Assistant">
+          <span class="btn--ai__dot" aria-hidden="true"></span>AI
+        </a>
+        {{else}}
+        <a href="/ai-assistant" class="btn btn--ai btn--ai-locked" aria-label="AI Research Assistant - Clearance tier required">
+          <span class="btn--ai__dot" aria-hidden="true"></span>AI
+        </a>
+        {{/has}}
         {{#unless @member}}
         <a href="#/portal/signup" data-portal="signup" class="btn btn--subscribe">SUBSCRIBE</a>
         {{else}}
-        <a href="#/portal/account" data-portal="account" class="btn btn--account">ACCOUNT</a>
+        {{! PATCH CV-003: Member tier badge driven by CSS data-member-tier on <html> }}
+        <div class="member-nav">
+          <span class="member-tier-badge" aria-label="Your tier"></span>
+          <a href="#/portal/account" data-portal="account" class="btn btn--account">ACCOUNT</a>
+        </div>
         {{/unless}}
       </div>
     </div>
@@ -326,13 +391,13 @@ Original sequence had Library + Researchers (Stage 5) before Conversion Mechanic
       {{#if @member}}<a href="#/portal/account" data-portal="account">Account</a>{{/if}}
     </div>
     <div class="site-footer__stamp">
-      UAP INVESTIGATIONS — CASE REF: UAPI-{{date format="YYYY"}} — {{@site.url}} — METHODOLOGY: {{@site.url}}/about
+      UAP INVESTIGATIONS - CASE REF: UAPI-{{date format="YYYY"}} - {{@site.url}} - METHODOLOGY: {{@site.url}}/about
     </div>
   </div>
 </footer>
 ```
 
-### `assets/css/header.css` — key rules
+### `assets/css/header.css` - key rules
 ```css
 .classification-bar {
   background: var(--c-text);
@@ -425,22 +490,72 @@ Original sequence had Library + Researchers (Stage 5) before Conversion Mechanic
   transition: opacity var(--t-fast) var(--ease);
 }
 .btn--subscribe:hover { opacity: 0.85; }
+
+/* PATCH CV-003: Member tier badge */
+.member-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.member-tier-badge {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px var(--sp-2);
+  border: 1px solid currentColor;
+}
+[data-member-tier="clearance"] .member-tier-badge::before { content: "CLEARANCE"; color: var(--c-accent); }
+[data-member-tier="investigator"] .member-tier-badge::before { content: "INVESTIGATOR"; color: var(--c-foia); }
+[data-member-tier="supporter"] .member-tier-badge::before { content: "SUPPORTER"; color: var(--c-text-2); }
+
+/* PATCH CV-003/CV-004: AI nav button */
+.btn--ai {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-2);
+  text-decoration: none;
+  transition: all var(--t-fast) var(--ease);
+}
+.btn--ai:hover { border-color: var(--c-accent); color: var(--c-accent); }
+.btn--ai__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%; /* Exception: indicator dot only */
+  background: var(--c-accent);
+  flex-shrink: 0;
+}
+.btn--ai-live .btn--ai__dot { animation: pulse-dot 2s ease-in-out infinite; }
+.btn--ai-locked .btn--ai__dot { background: var(--c-text-3); }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
 ```
 
-**Stage 1 test:** Upload zip, visit site. Should see classification bar, sticky nav with UAPI wordmark, document footer. Fonts should load. No content yet — that's expected.
+**Stage 1 test:** Upload zip, visit site. Should see classification bar, sticky nav with UAPI wordmark, document footer. Fonts should load. No content yet - that's expected.
 
 ---
 
-## Stage 2 — Cards + Badge System
+## Stage 2 - Cards + Badge System
 
 ### ⚠️ CRITICAL ARCHITECTURE DECISION (Bug #1 fix)
-`{{#match}}` in Ghost HBS performs EXACT string comparison only. `{{#match slug "hash-class-"}}` checks if slug equals `"hash-class-"` literally — which never matches real slugs like `hash-class-unclassified`.
+`{{#match}}` in Ghost HBS performs EXACT string comparison only. `{{#match slug "hash-class-"}}` checks if slug equals `"hash-class-"` literally - which never matches real slugs like `hash-class-unclassified`.
 
 **The fix: badges are entirely JS-driven. No HBS badge logic at all.**
 
 Templates output tag slugs as a `data-tags` attribute. `badges.js` reads that attribute, looks up each slug in a pre-defined `BADGE_MAP`, and injects badge HTML into pre-existing empty placeholder elements. This is cleaner, fully explicit, and immune to HBS operator confusion.
 
-### Template pattern — how to output tags (used in ALL card and article templates)
+### Template pattern - how to output tags (used in ALL card and article templates)
 ```handlebars
 <article class="card card--case"
   data-tags="{{#foreach tags}}{{slug}}{{#unless @last}},{{/unless}}{{/foreach}}">
@@ -455,7 +570,7 @@ For article (post.hbs), also add:
 <div class="article__context-tags"></div>  {{! badges.js injects inc/wit/geo tags here }}
 ```
 
-### `assets/js/badges.js` — COMPLETE (copy verbatim)
+### `assets/js/badges.js` - COMPLETE (copy verbatim)
 ```javascript
 (function () {
   'use strict';
@@ -624,7 +739,7 @@ For article (post.hbs), also add:
   color: var(--c-text-2);
 }
 
-/* ── Card status borders (PATCHED: removed !important — same specificity, escalation trap) ── */
+/* ── Card status borders (PATCHED: removed !important - same specificity, escalation trap) ── */
 .card--ongoing  { border-left-color: var(--c-accent); }
 .card--closed   { border-left-color: var(--c-closed); }
 .card--cold     { border-left-color: var(--c-cold); }
@@ -637,7 +752,7 @@ For article (post.hbs), also add:
 .article--pending  { border-left: var(--status-bar-art) solid var(--c-pending); }
 
 /* ── Empty badge container fix (Strategy Patch) ── */
-/* If a post has no classification tag, stamp div is empty — collapse it */
+/* If a post has no classification tag, stamp div is empty - collapse it */
 .card__stamp:empty,
 .article__stamp:empty,
 .card__badges:empty,
@@ -647,7 +762,7 @@ For article (post.hbs), also add:
 
 ### `partials/card-case.hbs`
 ```handlebars
-{{! data-tags feeds badges.js — NO {{#match}} anywhere in this file }}
+{{! data-tags feeds badges.js - NO {{#match}} anywhere in this file }}
 <article class="card card--case"
   data-tags="{{#foreach tags}}{{slug}}{{#unless @last}},{{/unless}}{{/foreach}}">
 
@@ -687,7 +802,7 @@ Revised card ID line:
 <span class="card__id">{{#if @custom.case_id}}{{@custom.case_id}}{{else}}UAPI-{{slug}}{{/if}}</span>
 ```
 
-### `assets/css/cards.css` — key rules
+### `assets/css/cards.css` - key rules
 ```css
 .card {
   background: var(--c-surface);
@@ -779,26 +894,26 @@ Revised card ID line:
 
 ---
 
-## CSS Design Patches (Pass 4 — Engagement + Accessibility)
+## CSS Design Patches (Pass 4 - Engagement + Accessibility)
 
 Add these to the appropriate CSS files during build. All are new additions not in earlier stages.
 
-### `assets/css/base.css` — Focus states (WCAG 2.1 AA, REQUIRED)
+### `assets/css/base.css` - Focus states (WCAG 2.1 AA, REQUIRED)
 ```css
-/* Focus states — must be visible, never remove outline */
+/* Focus states - must be visible, never remove outline */
 :focus-visible {
   outline: 2px solid var(--c-focus);
   outline-offset: 3px;
 }
 
-/* Visited links — let users know what they've read */
+/* Visited links - let users know what they've read */
 .card__title a:visited,
 .article a:visited,
 .cross-index__item a:visited {
   color: var(--c-visited);
 }
 
-/* Minimum touch targets — all interactive elements */
+/* Minimum touch targets - all interactive elements */
 a, button, input, select, textarea, [role="button"] {
   min-height: var(--touch-min);  /* 44px */
 }
@@ -807,7 +922,7 @@ p a, li a, .badge a, .card__meta a {
   min-height: unset;
 }
 
-/* Transition specificity fix — never use transition:all */
+/* Transition specificity fix - never use transition:all */
 .search-trigger {
   transition:
     border-color var(--t-fast) var(--ease),
@@ -825,14 +940,14 @@ p a, li a, .badge a, .card__meta a {
 }
 ```
 
-### `assets/css/article.css` — Body typography and layout
+### `assets/css/article.css` - Body typography and layout
 ```css
 .article__body {
   font-family: var(--f-serif);
   font-size: var(--t-body);      /* 18px */
-  line-height: var(--lh-loose);  /* 1.75 — optimal for serif at 18px */
+  line-height: var(--lh-loose);  /* 1.75 - optimal for serif at 18px */
   color: var(--c-text);
-  max-width: var(--w-content);   /* min(720px, 65ch) — font-relative optimal */
+  max-width: var(--w-content);   /* min(720px, 65ch) - font-relative optimal */
 }
 
 .article__body p { margin-bottom: var(--sp-6); }
@@ -938,9 +1053,9 @@ CSS for primary badge in meta:
 .badge--hash-ev-uncorroborated.badge--primary { color: var(--c-text-3); }
 ```
 
-### Mobile navigation (LAUNCH BLOCKER — must be in Stage 1, not deferred)
+### Mobile navigation (LAUNCH BLOCKER - must be in Stage 1, not deferred)
 ```handlebars
-{{! Add to header.hbs — hamburger button }}
+{{! Add to header.hbs - hamburger button }}
 <button class="nav-toggle" aria-label="Open navigation" aria-expanded="false" type="button">
   <span class="nav-toggle__bar"></span>
   <span class="nav-toggle__bar"></span>
@@ -1008,7 +1123,7 @@ if (navToggle && navOverlay) {
 }
 ```
 
-### `assets/css/responsive.css` — Mobile-specific additions
+### `assets/css/responsive.css` - Mobile-specific additions
 ```css
 /* Mobile: classification bar shortened */
 @media (max-width: 639px) {
@@ -1118,13 +1233,13 @@ if (badge.type === 'classification' && stampEl) {
 
 ---
 
-## Stage 3 — Homepage + Article
+## Stage 3 - Homepage + Article
 
 ### `index.hbs`
 ```handlebars
 {{!< default}}
 
-{{! Strategy patch: logged-in members are never newcomers — skip orientation block regardless of localStorage }}
+{{! Strategy patch: logged-in members are never newcomers - skip orientation block regardless of localStorage }}
 {{#unless @member}}{{> "newcomer-block"}}{{/unless}}
 
 <div class="home-sections">
@@ -1170,7 +1285,50 @@ if (badge.type === 'classification' && stampEl) {
 
 </div>
 
+{{! PATCH CV-009: AI teaser - passive FOMO for Clearance tier. Not a popup, not aggressive. }}
+{{#unless @member}}
+<div class="ai-teaser">
+  <span class="ai-teaser__label">CLEARANCE TIER</span>
+  <span class="ai-teaser__sep">-</span>
+  <span class="ai-teaser__desc">AI Research Assistant. Ask the full archive anything.</span>
+  <a href="/ai-assistant" class="ai-teaser__link">FOUNDING RATE $35/MO →</a>
+</div>
+{{else}}
+  {{#unless @member.paid}}
+  <div class="ai-teaser">
+    <span class="ai-teaser__label">CLEARANCE TIER</span>
+    <span class="ai-teaser__sep">-</span>
+    <span class="ai-teaser__desc">AI Research Assistant. Ask the full archive anything.</span>
+    <a href="/ai-assistant" class="ai-teaser__link">FOUNDING RATE $35/MO →</a>
+  </div>
+  {{/unless}}
+{{/unless}}
+
 {{> "newsletter-cta"}}
+```
+
+CSS for ai-teaser in `conversion.css`:
+```css
+.ai-teaser {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  max-width: var(--w-max);
+  margin: var(--sp-8) auto;
+  padding: var(--sp-4) var(--sp-6);
+  border: 1px solid var(--c-border);
+  border-left: 3px solid var(--c-accent);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  flex-wrap: wrap;
+}
+.ai-teaser__label { color: var(--c-accent); font-weight: 500; }
+.ai-teaser__sep { color: var(--c-border); }
+.ai-teaser__desc { color: var(--c-text-2); flex: 1; }
+.ai-teaser__link { color: var(--c-accent); text-decoration: none; white-space: nowrap; }
+.ai-teaser__link:hover { text-decoration: underline; }
 ```
 
 NOTE: `{{!< default}}` declares which layout template to use.
@@ -1179,7 +1337,7 @@ NOTE: `{{!< default}}` declares which layout template to use.
 ```handlebars
 {{!< default}}
 
-{{! data-tags on article wrapper — badges.js handles all rendering }}
+{{! data-tags on article wrapper - badges.js handles all rendering }}
 <article class="article {{post_class}}"
   data-tags="{{#foreach tags}}{{slug}}{{#unless @last}},{{/unless}}{{/foreach}}">
   <div class="article__inner">
@@ -1229,7 +1387,7 @@ NOTE: `{{!< default}}` declares which layout template to use.
 </article>
 ```
 
-NOTE: `{{#unless tag "reports"}}` — skip report-preview on Report posts themselves. Ghost uses `{{#has tag="reports"}}` / `{{#unless has tag="reports"}}` syntax. Exact form: `{{#has tag="reports"}}...{{else}}{{> "report-preview"}}{{/has}}`.
+NOTE: `{{#unless tag "reports"}}` - skip report-preview on Report posts themselves. Ghost uses `{{#has tag="reports"}}` / `{{#unless has tag="reports"}}` syntax. Exact form: `{{#has tag="reports"}}...{{else}}{{> "report-preview"}}{{/has}}`.
 
 Revised:
 ```handlebars
@@ -1240,40 +1398,90 @@ Revised:
 {{/has}}
 ```
 
-**Article status border:** Apply the status color as a left border on the `.article` element. Use `badges.js` same approach — add `.article--ongoing` etc. class to `.article` element.
+**Article status border:** Apply the status color as a left border on the `.article` element. Use `badges.js` same approach - add `.article--ongoing` etc. class to `.article` element.
 
 **Stage 3 test:** Visit a Case post. Should see: case ID, classification stamp, full badge row, article body, cross-index placeholder (empty partials for now), newsletter CTA placeholder.
 
 ---
 
-## Stage 4 — Section Archives
+## Stage 4 - Section Archives
 
 ### `custom-reports.hbs`
+
+**PATCH CV-005:** ALL reports visible to ALL users (title, date, excerpt, badges). Non-Investigators see locked cards with blur overlay. Counter shows archive depth = FOMO. Context-specific classification bar override.
+**PATCH CV-010:** Context-specific classification bar text on this page.
+
 ```handlebars
 {{!< default}}
 
-<div class="archive-page">
+<div class="archive-page archive-page--reports">
+  {{! PATCH CV-010: Context-specific classification bar }}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var bar = document.querySelector('.classification-bar__text');
+      if (bar) bar.textContent = 'INVESTIGATOR ACCESS - DEEP-DIVE REPORTS - $20/MO OR $18/REPORT';
+    });
+  </script>
+
   <header class="archive-header">
     <div class="archive-header__label">DOSSIER ARCHIVE</div>
     <h1 class="archive-header__title">REPORTS</h1>
     <p class="archive-header__desc">Deep-dive investigations. Minimum 2,000 words. Primary source component required.</p>
+
+    {{! PATCH CV-005: Archive counter - shows weight of locked content = FOMO }}
+    {{#get "posts" filter="tag:reports" limit="1" fields="id"}}
+    <div class="archive-stats">
+      <span class="archive-stats__count">{{pagination.total}} REPORTS IN ARCHIVE</span>
+      {{#has tier="investigator,clearance"}}
+      <span class="archive-stats__access archive-stats__access--granted">INVESTIGATOR ACCESS GRANTED</span>
+      {{else}}
+      <span class="archive-stats__access archive-stats__access--locked">INVESTIGATOR ACCESS - $20/MO OR $18/REPORT</span>
+      {{/has}}
+    </div>
+    {{/get}}
+
     {{! Bug #2 fix: check specifically for investigator tier, not just any paid tier }}
-    {{! Supporter ($5) is technically "paid" but cannot access Reports }}
     {{#has tier="investigator,clearance"}}
-      {{! Investigator/Clearance — no banner needed }}
+      {{! Investigator/Clearance - no banner needed }}
     {{else}}
     <div class="archive-tier-banner">
-      <span>INVESTIGATOR ACCESS — $20/MO INCLUDES ALL REPORTS</span>
-      <a href="#/portal/signup" data-portal="signup" class="btn btn--subscribe">SUBSCRIBE</a>
-      <span class="archive-tier-banner__sep">or</span>
-      <a href="#/portal/signin" data-portal="signin" class="archive-tier-banner__signin">SIGN IN</a>
+      <div class="archive-tier-banner__options">
+        <span>ALL REPORTS - INVESTIGATOR $20/MO</span>
+        <a href="#/portal/signup?plan=investigator" data-portal="signup" class="btn btn--subscribe">SUBSCRIBE</a>
+        <span class="archive-tier-banner__sep">·</span>
+        <span>EARLY ACCESS - SUPPORTER $5/MO</span>
+        <a href="#/portal/signup?plan=supporter" data-portal="signup" class="btn btn--secondary">SUPPORTER</a>
+        <span class="archive-tier-banner__sep">·</span>
+        <a href="#/portal/signin" data-portal="signin" class="archive-tier-banner__signin">SIGN IN</a>
+      </div>
     </div>
     {{/has}}
   </header>
 
   <div class="card-grid">
     {{#foreach posts}}
+    {{! PATCH CV-005: Locked-but-visible cards. Non-Investigators see title/excerpt/badges blurred. }}
+    {{#has tier="investigator,clearance"}}
       {{> "card-report"}}
+    {{else}}
+    <article class="card card--report card--report-locked"
+      data-tags="{{#foreach tags}}{{slug}}{{#unless @last}},{{/unless}}{{/foreach}}">
+      <div class="card__stamp"></div>
+      <div class="card__badges"></div>
+      <div class="card__lock-overlay">
+        <span class="card__lock-label">INVESTIGATOR ACCESS</span>
+        <a href="#/portal/signup?plan=investigator" data-portal="signup" class="card__lock-cta btn btn--subscribe">$20/mo - ALL REPORTS</a>
+        <a href="{{url}}" class="card__lock-purchase">or $18 this report</a>
+      </div>
+      <div class="card__body card__body--locked">
+        <h2 class="card__title">{{title}}</h2>
+        <p class="card__excerpt">{{excerpt words="20"}}</p>
+        <div class="card__meta">
+          <span class="card__date">{{date format="DD MMM YYYY"}}</span>
+        </div>
+      </div>
+    </article>
+    {{/has}}
     {{/foreach}}
   </div>
 
@@ -1281,37 +1489,308 @@ Revised:
 </div>
 ```
 
+Add to `cards.css`:
+```css
+/* Locked report card */
+.card--report-locked { position: relative; overflow: hidden; }
+.card__body--locked {
+  filter: blur(2px);
+  user-select: none;
+  pointer-events: none;
+}
+.card__lock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  background: rgba(244, 241, 234, 0.75); /* parchment tint */
+  z-index: 2;
+  padding: var(--sp-4);
+}
+.card__lock-label {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--c-text-2);
+}
+.card__lock-purchase {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  color: var(--c-text-2);
+}
+
+/* Archive stats bar */
+.archive-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: var(--sp-2) 0;
+  border-top: 1px solid var(--c-border);
+  margin-top: var(--sp-4);
+}
+.archive-stats__count { color: var(--c-text-2); }
+.archive-stats__access--granted { color: var(--c-foia); }
+.archive-stats__access--locked { color: var(--c-accent); }
+```
+
 ### `partials/tier-prompt.hbs`
+
+**PATCH CV-001:** Two-tier gate. Supporter ($5 early access) AND Investigator ($20 all access) shown at every report gate. $18 purchase equally prominent. This closes the $0→$20 cliff.
+
 ```handlebars
 <div class="tier-prompt">
   <div class="tier-prompt__header">
-    <span class="tier-prompt__label">INVESTIGATOR ACCESS REQUIRED</span>
+    <span class="tier-prompt__label">REPORT ACCESS</span>
   </div>
-  <p class="tier-prompt__desc">Full reports require an Investigator subscription.</p>
+  <p class="tier-prompt__desc">Deep-dive Reports are available to Investigators. Supporters get 24-hour early access.</p>
   <div class="tier-prompt__options">
     <div class="tier-option tier-option--primary">
       <div class="tier-option__name">INVESTIGATOR</div>
-      <div class="tier-option__price">$20/mo · $200/yr</div>
-      <div class="tier-option__benefit">All reports · Everything in Supporter</div>
-      <a href="#/portal/signup" data-portal="signup" class="btn btn--subscribe">SUBSCRIBE</a>
+      <div class="tier-option__price">$20 / month</div>
+      <div class="tier-option__note">$200/yr · All reports included</div>
+      <a href="#/portal/signup?plan=investigator" data-portal="signup" class="btn btn--subscribe">SUBSCRIBE - INVESTIGATOR</a>
     </div>
     <div class="tier-option tier-option--secondary">
-      <div class="tier-option__name">THIS REPORT</div>
-      <div class="tier-option__price">$18 one-time</div>
-      <a href="{{@site.url}}/purchase/{{slug}}" class="btn btn--outline">PURCHASE REPORT</a>
+      <div class="tier-option__name">SUPPORTER</div>
+      <div class="tier-option__price">$5 / month</div>
+      <div class="tier-option__note">$50/yr · 24-hr early access + patronage tier</div>
+      <a href="#/portal/signup?plan=supporter" data-portal="signup" class="btn btn--secondary">SUBSCRIBE - SUPPORTER</a>
     </div>
   </div>
-  <p class="tier-prompt__supporter">
-    <a href="#/portal/signup" data-portal="signup">Supporter tier ($5/mo)</a> — community access + early report previews
+  <p class="tier-prompt__purchase">
+    Or purchase this report individually: <a href="/reports" class="tier-prompt__purchase-link">$18 one-time →</a>
   </p>
+  {{#if @member}}{{#unless @member.paid}}
+  <p class="tier-prompt__signed-in">Signed in as {{@member.email}}. Upgrade above.</p>
+  {{/unless}}{{/if}}
 </div>
 ```
 
-NOTE: Individual report purchase at `{{@site.url}}/purchase/{{slug}}` will need a Ghost integration or Lemon Squeezy link. Phase 2 concern -- for now, link to `/reports` page.
+NOTE: `?plan=investigator` hint in portal URL is best-effort - Ghost Portal may not auto-select the plan, but it opens Portal to the relevant tier. Individual report purchase links to `/reports` page (individual Stripe checkout is Phase 2 - requires per-post Stripe payment link or Lemon Squeezy integration).
 
 ---
 
-## Stage 5 — Library + Researchers
+### `custom-ai.hbs` (PATCH CV-004 - NEW FILE)
+
+**Ghost page slug:** `/ai-assistant` - create a Ghost Page with this slug, assign template "Ai-assistant" (from package.json).
+**Purpose:** Prominent in nav actions (the `[AI ●]` button). FOMO gate for non-Clearance. Confirmation for founding Clearance members. State machine: 3 states.
+
+Add to Stage 9 Ghost Admin setup:
+- Create page: title "AI Research Assistant", slug `ai-assistant`
+- Assign template: custom-ai
+
+```handlebars
+{{!< default}}
+{{#is "page"}}
+<div class="ai-page">
+
+  {{#has tier="clearance"}}
+  {{! STATE 2 (Phase 3 live) / STATE 1 (pre-launch): Clearance member confirmed }}
+  <div class="ai-page__inner ai-page__inner--confirmed">
+    <div class="ai-page__stamp">CLEARANCE CONFIRMED</div>
+    <h1 class="ai-page__headline">AI Research Assistant</h1>
+    <div class="ai-page__member-info">Signed in as {{@member.email}}</div>
+    <p class="ai-page__status">
+      You are a founding Clearance member. The AI Research Assistant is in active development.
+      Founding members receive access first - expected Q3 2026.
+    </p>
+    <div class="ai-page__progress-block">
+      <div class="ai-page__progress-label">DEVELOPMENT STATUS</div>
+      <div class="ai-page__progress-track">
+        <div class="ai-page__progress-fill" style="width: 35%"></div>
+      </div>
+      <div class="ai-page__progress-stages">
+        <span class="ai-page__stage ai-page__stage--done">Corpus indexing</span>
+        <span class="ai-page__stage ai-page__stage--active">Model training</span>
+        <span class="ai-page__stage">Clearance rollout</span>
+        <span class="ai-page__stage">Public launch</span>
+      </div>
+    </div>
+    <p class="ai-page__notify">
+      You will be notified at {{@member.email}} when your access is ready.
+      Questions? <a href="/about#contact">Contact us.</a>
+    </p>
+  </div>
+
+  {{else}}
+  {{! STATE 1 (pre-launch) / STATE 3 (post-launch): non-Clearance FOMO gate }}
+  <div class="ai-page__inner ai-page__inner--gate">
+    <div class="ai-page__stamp ai-page__stamp--locked">ACCESS RESTRICTED</div>
+    <div class="ai-page__tier-label">CLEARANCE TIER FEATURE</div>
+    <h1 class="ai-page__headline">UAPI AI Research Assistant</h1>
+    <p class="ai-page__tagline">
+      Ask the full UAPI database anything. Cross-reference cases, evidence quality, sources, and researchers
+      across every record in the archive - in seconds.
+    </p>
+
+    <div class="ai-page__preview">
+      <div class="ai-page__preview-label">EXAMPLE QUERIES - CLEARANCE ACCESS</div>
+      <ul class="ai-page__queries">
+        <li class="ai-page__query ai-page__query--visible">
+          "Which incidents have radar confirmation AND an official government document within 90 days?"
+        </li>
+        <li class="ai-page__query ai-page__query--visible">
+          "Show all trans-medium cases with military witnesses since 2004, sorted by evidence quality."
+        </li>
+        <li class="ai-page__query ai-page__query--redacted" aria-label="Query redacted - Clearance required">
+          ██████ ██ ████████ ████ ██████ ██████ ████████ ██ ██████
+        </li>
+        <li class="ai-page__query ai-page__query--redacted" aria-label="Query redacted - Clearance required">
+          ████████ ██████ ████ ██████████ ██ ██████ ████ ████████
+        </li>
+      </ul>
+    </div>
+
+    <div class="ai-page__gate-block">
+      <div class="ai-page__gate-header">FOUNDING MEMBER RATE - WAITLIST OPEN</div>
+      <div class="ai-page__pricing">
+        <div class="ai-page__price">$35 <span class="ai-page__period">/ month</span></div>
+        <div class="ai-page__price-note">
+          Founding rate locks permanently at $35/mo.<br>
+          When Clearance launches publicly, rate increases to $65/mo.
+        </div>
+      </div>
+      <ul class="ai-page__features">
+        <li>AI Research Assistant - cross-reference the full UAPI corpus</li>
+        <li>Private research repository - save, annotate, and export cases</li>
+        <li>Real-time UAP disclosure feed - X/social + official sources, curated</li>
+        <li>All Investigator tier Reports included</li>
+        <li>Shape the AI roadmap - founding member feedback is prioritized</li>
+        <li>$350/yr annual option (2 months free at founding rate)</li>
+      </ul>
+      <a href="#/portal/signup?plan=clearance" data-portal="signup"
+         class="btn btn--subscribe ai-page__cta">JOIN CLEARANCE WAITLIST - $35/MO</a>
+      <p class="ai-page__legal">
+        Founding rate: $35/mo. Public launch rate: $65/mo. Founding rate locks permanently upon subscribing.
+        AI features expected Q3 2026. If delivery extends beyond 12 months of launch, founding rate continues
+        until features are live.
+      </p>
+    </div>
+  </div>
+  {{/has}}
+
+</div>
+{{/is}}
+```
+
+`assets/css/ai.css` - key rules:
+```css
+.ai-page { max-width: 720px; margin: 0 auto; padding: var(--sp-12) var(--sp-6); }
+.ai-page__inner { display: flex; flex-direction: column; gap: var(--sp-8); }
+
+.ai-page__stamp {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 2px solid var(--c-foia);
+  color: var(--c-foia);
+  display: inline-block;
+  padding: var(--sp-1) var(--sp-3);
+}
+.ai-page__stamp--locked {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+.ai-page__tier-label {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--c-text-2);
+}
+.ai-page__headline {
+  font-family: var(--f-serif);
+  font-size: var(--t-3xl);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  color: var(--c-text);
+}
+.ai-page__tagline { font-size: var(--t-lg); color: var(--c-text-2); line-height: var(--lh-loose); }
+
+.ai-page__preview { border: 1px solid var(--c-border); padding: var(--sp-6); background: var(--c-surface); }
+.ai-page__preview-label {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-text-3);
+  margin-bottom: var(--sp-4);
+}
+.ai-page__queries { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--sp-3); }
+.ai-page__query {
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  padding: var(--sp-3) var(--sp-4);
+  border-left: 3px solid var(--c-border);
+}
+.ai-page__query--visible { color: var(--c-text); border-left-color: var(--c-foia); }
+.ai-page__query--redacted {
+  color: var(--c-text-3);
+  filter: blur(1.5px);
+  user-select: none;
+  border-left-color: var(--c-accent);
+  font-size: var(--t-base);
+  letter-spacing: 0.08em;
+}
+
+.ai-page__gate-block {
+  border: 1px solid var(--c-accent);
+  padding: var(--sp-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+.ai-page__gate-header {
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+.ai-page__price {
+  font-family: var(--f-mono);
+  font-size: var(--t-2xl);
+  font-weight: 500;
+  color: var(--c-text);
+}
+.ai-page__period { font-size: var(--t-base); color: var(--c-text-2); }
+.ai-page__price-note { font-size: var(--t-sm); color: var(--c-text-2); line-height: var(--lh-snug); }
+.ai-page__features { padding-left: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-2); }
+.ai-page__features li { font-size: var(--t-sm); color: var(--c-text-2); }
+.ai-page__cta { display: block; text-align: center; padding: var(--sp-4); margin-top: var(--sp-2); }
+.ai-page__legal { font-size: var(--t-xs); color: var(--c-text-3); line-height: var(--lh-normal); }
+
+/* Progress block (Clearance confirmed state) */
+.ai-page__progress-block { display: flex; flex-direction: column; gap: var(--sp-3); }
+.ai-page__progress-label { font-family: var(--f-mono); font-size: var(--t-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-text-3); }
+.ai-page__progress-track { height: 4px; background: var(--c-border); position: relative; }
+.ai-page__progress-fill { height: 100%; background: var(--c-foia); transition: width 1s var(--ease); }
+.ai-page__progress-stages { display: flex; gap: var(--sp-4); }
+.ai-page__stage { font-family: var(--f-mono); font-size: var(--t-xs); color: var(--c-text-3); }
+.ai-page__stage--done { color: var(--c-foia); }
+.ai-page__stage--active { color: var(--c-text); }
+```
+
+Add `assets/css/ai.css` to `default.hbs` CSS load list (after `conversion.css`):
+```html
+<link rel="stylesheet" href="{{asset "css/ai.css"}}">
+```
+
+**Stage 4 test for AI page:** Visit `/ai-assistant` logged out → see gate with locked query examples and $35/mo CTA. Log in as Clearance member (or simulate) → see confirmed state with progress bar.
+
+---
+
+## Stage 5 - Library + Researchers
 
 ### Library filter data attributes
 Each library card must have all filter values as data attributes on the card element. Set these via Ghost tags:
@@ -1448,13 +1927,82 @@ Researcher page tag conventions:
 
 ## Stage 6 — Conversion Mechanics
 
+### `partials/newcomer-block.hbs` (PATCH CV-009 — stats added)
+
+Shown only to logged-out visitors (controlled in index.hbs). Orients first-time visitors, shows archive depth, and includes dismiss-to-localStorage logic in `badges.js`.
+
+```handlebars
+<div class="newcomer-block" id="newcomer-block">
+  <div class="newcomer-block__inner">
+    <div class="newcomer-block__header">
+      <span class="newcomer-block__label">ABOUT THIS DATABASE</span>
+      <button class="newcomer-block__dismiss" aria-label="Dismiss this block">✕</button>
+    </div>
+    <p class="newcomer-block__desc">
+      UAPI investigates, contextualizes, and grades UAP phenomena across the full spectrum —
+      from official government records to speculative claims.
+      Every piece of content is badged by evidence quality and source type.
+      <a href="/about">Read our methodology →</a>
+    </p>
+    {{! PATCH CV-009: Live stats from Ghost — shows archive weight to new visitors }}
+    <div class="newcomer-block__stats">
+      {{#get "posts" filter="tag:cases" limit="1" fields="id"}}
+      <span class="newcomer-stat">
+        <span class="newcomer-stat__n">{{pagination.total}}</span>
+        <span class="newcomer-stat__label">CASES</span>
+      </span>
+      {{/get}}
+      {{#get "posts" filter="tag:reports" limit="1" fields="id"}}
+      <span class="newcomer-stat">
+        <span class="newcomer-stat__n">{{pagination.total}}</span>
+        <span class="newcomer-stat__label">REPORTS</span>
+      </span>
+      {{/get}}
+      {{#get "posts" filter="tag:library" limit="1" fields="id"}}
+      <span class="newcomer-stat">
+        <span class="newcomer-stat__n">{{pagination.total}}</span>
+        <span class="newcomer-stat__label">LIBRARY</span>
+      </span>
+      {{/get}}
+    </div>
+  </div>
+</div>
+```
+
+NOTE: 3x `{{#get}}` calls on one partial is the upper limit. Each is lightweight (`limit="1" fields="id"`) — Ghost resolves these as COUNT queries. Do not add more `{{#get}}` calls to this partial.
+
+CSS in `conversion.css`:
+```css
+.newcomer-block {
+  border: 1px solid var(--c-border);
+  border-left: 3px solid var(--c-accent);
+  padding: var(--sp-5) var(--sp-6);
+  margin-bottom: var(--sp-8);
+  background: var(--c-surface);
+}
+.newcomer-block__inner { max-width: var(--w-max); margin: 0 auto; }
+.newcomer-block__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--sp-3); }
+.newcomer-block__label { font-family: var(--f-mono); font-size: var(--t-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-text-3); }
+.newcomer-block__dismiss { background: none; border: none; font-family: var(--f-mono); font-size: var(--t-xs); color: var(--c-text-3); cursor: pointer; padding: 0; }
+.newcomer-block__dismiss:hover { color: var(--c-text); }
+.newcomer-block__desc { font-size: var(--t-sm); color: var(--c-text-2); line-height: var(--lh-normal); margin-bottom: var(--sp-4); }
+
+.newcomer-block__stats { display: flex; gap: var(--sp-8); }
+.newcomer-stat { display: flex; flex-direction: column; align-items: center; gap: var(--sp-1); }
+.newcomer-stat__n { font-family: var(--f-mono); font-size: var(--t-xl); font-weight: 500; color: var(--c-text); }
+.newcomer-stat__label { font-family: var(--f-mono); font-size: var(--t-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-text-3); }
+```
+
+---
+
 ### `partials/newsletter-cta.hbs`
 ```handlebars
 <div class="newsletter-cta">
   <div class="newsletter-cta__inner">
+    {{! PATCH CV-007: JTBD-aligned copy. Benefit, not feature. Bridge to Investigator upgrade. }}
     <div class="newsletter-cta__label">FIELD DISPATCHES</div>
-    <h3 class="newsletter-cta__headline">Bi-weekly analysis delivered to your inbox.</h3>
-    <p class="newsletter-cta__sub">Dispatch roundup · Case analysis · Upcoming report preview</p>
+    <h3 class="newsletter-cta__headline">Stay ahead of the next disclosure.</h3>
+    <p class="newsletter-cta__sub">Free bi-weekly briefing: curated UAP news · badge-annotated Case digest · upcoming Report preview</p>
     {{#unless @member}}
     <form class="newsletter-cta__form" data-members-form="subscribe">
       <input type="email" name="email" data-members-email placeholder="YOUR EMAIL ADDRESS" required class="newsletter-cta__input">
@@ -1478,12 +2026,12 @@ NOTE: `data-members-form="subscribe"` is Ghost's native subscribe form attribute
   <div class="report-preview" data-report-url="{{url}}" data-report-title="{{title}}">
     {{! JS fills in full vs compact version based on sessionStorage counter }}
     <div class="report-preview__full">
-      <div class="report-preview__label">LATEST REPORT — INVESTIGATOR ACCESS</div>
+      <div class="report-preview__label">LATEST REPORT - INVESTIGATOR ACCESS</div>
       <h3 class="report-preview__title"><a href="{{url}}">{{title}}</a></h3>
       <p class="report-preview__excerpt">{{excerpt words="30"}}</p>
       <div class="report-preview__cta">
-        <a href="#/portal/signup" data-portal="signup" class="btn btn--subscribe">SUBSCRIBE — $20/MO</a>
-        <a href="{{url}}" class="report-preview__purchase">or purchase this report — $18</a>
+        <a href="#/portal/signup" data-portal="signup" class="btn btn--subscribe">SUBSCRIBE - $20/MO</a>
+        <a href="{{url}}" class="report-preview__purchase">or purchase this report - $18</a>
       </div>
     </div>
     <div class="report-preview__compact" style="display:none">
@@ -1538,7 +2086,7 @@ NOTE: The `filter="slug:-{{slug}}"` syntax excludes the current post. Filter com
 
 ---
 
-## Stage 7 — Search
+## Stage 7 - Search
 
 ### `partials/search-modal.hbs`
 ```handlebars
@@ -1592,7 +2140,7 @@ NOTE: The `filter="slug:-{{slug}}"` syntax excludes the current post. Filter com
         initAlgolia();
         window._algoliaInit = true;
       } else {
-        console.warn('UAPI: Algolia not loaded — search unavailable');
+        console.warn('UAPI: Algolia not loaded - search unavailable');
       }
     }
   });
@@ -1613,7 +2161,7 @@ NOTE: The `filter="slug:-{{slug}}"` syntax excludes the current post. Filter com
   });
 
   // Strategy patch: after Portal signup completes, re-open search automatically
-  // User signed up specifically to search — don't leave them stranded
+  // User signed up specifically to search - don't leave them stranded
   // Ghost Portal fires 'ghost:signin' custom event on the window after successful auth
   window.addEventListener('ghost:signin', function() {
     // Small delay to let Portal close cleanly before search opens
@@ -1622,7 +2170,7 @@ NOTE: The `filter="slug:-{{slug}}"` syntax excludes the current post. Filter com
         overlay.removeAttribute('aria-hidden');
         overlay.classList.add('is-open');
         // Init Algolia now that user is authenticated (page will have reloaded with member session)
-        // Note: page may reload on auth — if so, this fires after reload on the already-open state
+        // Note: page may reload on auth - if so, this fires after reload on the already-open state
       }
     }, 400);
   });
@@ -1631,7 +2179,7 @@ NOTE: The `filter="slug:-{{slug}}"` syntax excludes the current post. Filter com
   // Set flag before Portal opens, re-open search after reload if flag present
   if (sessionStorage.getItem('uapi-search-intent')) {
     sessionStorage.removeItem('uapi-search-intent');
-    // User was in search flow before login — re-open search
+    // User was in search flow before login - re-open search
     setTimeout(function() {
       overlay.removeAttribute('aria-hidden');
       overlay.classList.add('is-open');
@@ -1660,7 +2208,7 @@ Load Algolia InstantSearch from CDN in `default.hbs` (only when member is logged
 ```
 
 ```javascript
-// algolia-search.js — only runs if member (search-gate.js calls initAlgolia)
+// algolia-search.js - only runs if member (search-gate.js calls initAlgolia)
 function initAlgolia() {
   const APP_ID = 'YOUR_ALGOLIA_APP_ID';       // Replace at build
   const SEARCH_KEY = 'YOUR_SEARCH_ONLY_KEY';  // Replace at build
@@ -1710,7 +2258,7 @@ function initAlgolia() {
 
 ---
 
-## Stage 8 — Responsive
+## Stage 8 - Responsive
 
 ```css
 /* responsive.css */
@@ -1742,7 +2290,7 @@ Mobile nav: for Phase 1 launch, a simple hamburger that toggles `.site-nav__link
 
 ---
 
-## Stage 9 — Deploy
+## Stage 9 - Deploy
 
 ### Zip the theme
 ```bash
@@ -1762,7 +2310,7 @@ unzip -l ../uapi-dossier.zip | grep package.json
 - Ghost Admin → Pages → Library page → Settings → Template → "Library"
 - Repeat for Researchers, Reports, Dispatches pages
 
-### Pre-deploy Ghost Admin checklist (STRATEGY PATCH — these were missing, all are hard blockers)
+### Pre-deploy Ghost Admin checklist (STRATEGY PATCH - these were missing, all are hard blockers)
 
 **Ghost Newsletter (must configure before subscribe form works):**
 - [ ] Ghost Admin → Newsletters → Create newsletter
@@ -1778,7 +2326,7 @@ unzip -l ../uapi-dossier.zip | grep package.json
 - [ ] Verify Clearance ($35/mo founding, $350/yr founding) tier created as waitlist
 - [ ] Verify annual plans are configured for all tiers
 
-**Report post access (must set on each Report post — Ghost Admin per-post setting):**
+**Report post access (must set on each Report post - Ghost Admin per-post setting):**
 - [ ] Open each Report post → Settings → Visibility → Specific tiers → Investigator + Clearance
 - [ ] Verify each Report has `<!--members-only-->` HTML card after intro paragraph
 - [ ] **⚠️ CONTENT OPS WARNING:** `<!--members-only-->` MUST appear in every Report. Without it, the entire report is publicly visible regardless of Visibility setting. Place it after the first 2-3 paragraphs (the hook). Add via Ghost editor → Insert card → HTML → paste `<!--members-only-->`.
@@ -1788,10 +2336,51 @@ unzip -l ../uapi-dossier.zip | grep package.json
 - [ ] Verify Algolia dashboard shows records equal to published post count
 - [ ] Test search in overlay returns results (log in, open search, type a known keyword)
 
+**Cloudflare Cache Rules (PATCH CV-011 — required for "lightning fast" performance):**
+```
+[ ] Cloudflare Dashboard → uapinvestigations.com → Cache → Cache Rules → Add rule
+[ ] Rule 1: "Static assets"
+    Match: hostname is uapinvestigations.com AND URL path starts with /assets/
+    Action: Cache everything
+    Edge TTL: 1 year | Browser TTL: 1 year
+    Reason: CSS/JS/fonts/images are cache-busted by Ghost's ?v= hash suffix — safe to cache forever
+
+[ ] Rule 2: "HTML pages"
+    Match: hostname is uapinvestigations.com AND NOT (URL path starts with /ghost/)
+    Action: Cache everything
+    Edge TTL: 30 minutes | Browser TTL: 5 minutes
+    Reason: Short enough for content freshness. Absorbs traffic spikes without hitting the droplet.
+
+[ ] Rule 3: "Ghost admin bypass"
+    Match: hostname is uapinvestigations.com AND URL path starts with /ghost/
+    Action: Bypass cache
+    Reason: Admin panel must always hit origin.
+
+[ ] Verify: load homepage, check CF-Cache-Status response header
+    - First load: CF-Cache-Status = MISS (cache warming)
+    - Second load: CF-Cache-Status = HIT (served from Cloudflare edge)
+```
+
+**Assign custom templates to pages (updated list — includes AI page):**
+- [ ] Ghost Admin → Pages → Library → Settings → Template → "Library"
+- [ ] Ghost Admin → Pages → Researchers → Settings → Template → "Researchers"
+- [ ] Ghost Admin → Pages → Reports → Settings → Template → "Reports"
+- [ ] Ghost Admin → Pages → Dispatches → Settings → Template → "Dispatches"
+- [ ] Ghost Admin → Pages → AI Research Assistant (slug: ai-assistant) → Settings → Template → "Ai-assistant"
+
+**Affiliate FTC Disclosure (PATCH CV-008 — required by FTC 16 CFR Part 255):**
+- [ ] Add to Methodology page (`/about`): "UAPI Library contains affiliate links to paid books via Amazon Associates. UAPI earns a small commission if you purchase via these links. This does not affect editorial recommendations."
+- [ ] Add to site footer: "Some Library links are affiliate links."
+- [ ] Add to any Case article that contains a book recommendation link: "[Affiliate link]" label inline, or a disclosure line at the bottom of the article.
+
 ### Post-deploy checks
 - [ ] Classification bar renders
 - [ ] Nav links correct (configured in Ghost Admin → Navigation)
-- [ ] Fonts loading (check network tab)
+- [ ] AI button visible in nav actions ([AI ●] with pulsing dot for Clearance, locked indicator for others)
+- [ ] `/ai-assistant` loads gate page for non-Clearance, confirmed state for Clearance members
+- [ ] Member tier badge appears in nav for logged-in members (SUPPORTER / INVESTIGATOR / CLEARANCE)
+- [ ] Fonts loading from self-hosted assets (check network tab — should see /assets/fonts/*.woff2, NOT fonts.googleapis.com)
+- [ ] Reports archive shows archive counter ("N REPORTS IN ARCHIVE") and locked cards for non-Investigators
 - [ ] One test Case post: all badge types render correctly
 - [ ] `badges.js` applying status class to card wrapper
 - [ ] Empty badge containers collapse (`.card__stamp:empty` → display:none)
@@ -1812,15 +2401,15 @@ unzip -l ../uapi-dossier.zip | grep package.json
 
 | # | Gotcha | Fix |
 |---|--------|-----|
-| 1 | **CRITICAL — FIXED:** `{{#match}}` is EXACT comparison only. `{{#match slug "hash-class-"}}` never fires on real slugs. | Badge system is entirely JS-driven. `data-tags` attribute on wrapper, `BADGE_MAP` in badges.js, zero HBS badge logic. |
-| 2 | `{{#unless @member.paid}}` treats Supporter ($5) as "paid" — Supporters bypass Reports gate | Use `{{#has tier="investigator,clearance"}}` for Report access checks. **FIXED in custom-reports.hbs.** |
-| 3 | `data-members-email` attribute missing on newsletter input — Ghost Portal won't capture email | Add `data-members-email` to the `<input>` in newsletter-cta.hbs. **FIXED.** |
+| 1 | **CRITICAL - FIXED:** `{{#match}}` is EXACT comparison only. `{{#match slug "hash-class-"}}` never fires on real slugs. | Badge system is entirely JS-driven. `data-tags` attribute on wrapper, `BADGE_MAP` in badges.js, zero HBS badge logic. |
+| 2 | `{{#unless @member.paid}}` treats Supporter ($5) as "paid" - Supporters bypass Reports gate | Use `{{#has tier="investigator,clearance"}}` for Report access checks. **FIXED in custom-reports.hbs.** |
+| 3 | `data-members-email` attribute missing on newsletter input - Ghost Portal won't capture email | Add `data-members-email` to the `<input>` in newsletter-cta.hbs. **FIXED.** |
 | 4 | Newcomer block dismiss JS was missing entirely | Dismiss logic added to bottom of badges.js. **FIXED.** |
 | 5 | `algolia-search.js` throws `algoliasearch is not defined` for non-members (CDN not loaded) | Guard with `typeof algoliasearch !== 'undefined'` before calling. **FIXED in search-gate.js.** |
-| 6 | Ghost Portal overlay opens on top of search overlay (both visible simultaneously) | Added `hashchange` listener in search-gate.js — search closes when Portal hash fires. **FIXED.** |
+| 6 | Ghost Portal overlay opens on top of search overlay (both visible simultaneously) | Added `hashchange` listener in search-gate.js - search closes when Portal hash fires. **FIXED.** |
 | 7 | CSS class typo `badge--badge-hash-class-foia` (double prefix) | Fixed to `badge--hash-class-foia`. **FIXED.** |
 | 8 | ZIP command shown two ways, one wraps the theme in a subfolder inside the zip | Canonical: `cd uapi-dossier/ && zip -r ../uapi-dossier.zip .` **FIXED.** |
-| 9 | Internal tags need `visibility="all"` in `{{tags}}` shorthand | Always use `{{foreach tags}}` — but now moot since badges are JS-driven from `data-tags`. |
+| 9 | Internal tags need `visibility="all"` in `{{tags}}` shorthand | Always use `{{foreach tags}}` - but now moot since badges are JS-driven from `data-tags`. |
 | 10 | `{{@custom.case_id}}` only works if Ghost Custom fields feature is enabled | Ghost 6.x supports custom fields in post settings panel natively. |
 | 11 | Ghost Portal data-portal attribute won't work if Portal is disabled | Verify Portal is enabled in Ghost Admin → Membership. |
 | 12 | `{{#paywall}}` requires post `access` to be set to a paid tier | Set post access in Ghost Admin → Post settings → Visibility. |
@@ -1846,32 +2435,32 @@ unzip -l ../uapi-dossier.zip | grep package.json
 
 ---
 
-## Recursive Self-Vetting — Pass 1 (Original)
+## Recursive Self-Vetting - Pass 1 (Original)
 Collisions=5 Tribunal=11. All passed. Badge JS post-processing noted as architectural decision.
 
-## Recursive Self-Vetting — Pass 2 (Ghost's Request — Full Re-Audit)
+## Recursive Self-Vetting - Pass 2 (Ghost's Request - Full Re-Audit)
 
 **8 bugs found and patched. Summary:**
 
 **CRITICAL (build-day blockers if not fixed):**
-- Bug #1: `{{#match}}` is exact-only — entire badge system was broken. FIXED: full JS-driven `BADGE_MAP` approach.
-- Bug #2: `{{#unless @member.paid}}` treats Supporter as paid — Supporters saw Report content free. FIXED: `{{#has tier="investigator,clearance"}}`.
+- Bug #1: `{{#match}}` is exact-only - entire badge system was broken. FIXED: full JS-driven `BADGE_MAP` approach.
+- Bug #2: `{{#unless @member.paid}}` treats Supporter as paid - Supporters saw Report content free. FIXED: `{{#has tier="investigator,clearance"}}`.
 
 **MEDIUM:**
-- Bug #3: `data-members-email` missing from newsletter input — email not captured. FIXED.
+- Bug #3: `data-members-email` missing from newsletter input - email not captured. FIXED.
 - Bug #4: Newcomer block dismiss JS never written. FIXED: added to badges.js.
-- Bug #5: Algolia init called before CDN loaded for non-members — silent throw. FIXED: guard added.
+- Bug #5: Algolia init called before CDN loaded for non-members - silent throw. FIXED: guard added.
 - Bug #6: Ghost Portal overlay stacked on top of search overlay. FIXED: `hashchange` listener closes search.
 
 **LOW:**
 - Bug #7: CSS class typo `badge--badge-hash-class-foia`. FIXED.
 - Bug #8: ZIP command ambiguous. FIXED: canonical form documented.
 
-**Post-patch Thunderdome — All 11 Council personas re-vote:**
+**Post-patch Thunderdome - All 11 Council personas re-vote:**
 - Alex: badge system now fires on page load, no empty card frames. PASS.
 - Dr. Patel: Algolia guard prevents silent failures. PASS.
 - Mike: no change. PASS.
-- Linda: badge map is explicit and complete — all 30 badge types defined. PASS.
+- Linda: badge map is explicit and complete - all 30 badge types defined. PASS.
 - Jordan: Supporter correctly blocked from Reports (not accidentally let through). PASS.
 - Editorial architect: newsletter form now actually captures email. PASS.
 - Subscription publisher: tier gates are accurate. PASS.

@@ -16,16 +16,23 @@ UAP Investigations (UAPI) is an independent research and analysis platform. UAPI
 | Tier | Name | Monthly | Annual | Access |
 |------|------|---------|--------|--------|
 | 0 | Public | Free | Free | All primary sources, full library, all free-tagged Cases, community forum |
-| 1 | Supporter | $5/mo | $50/yr | Patronage tier: forum Verified badge, 24-hour early report access, monthly briefing email. Support framing — not feature framing. |
+| 1 | Supporter | $5/mo | $50/yr | Patronage tier: forum Verified badge, 24-hour early report access, monthly briefing email. **Also serves as stepping stone in conversion path — appears at every report gate alongside Investigator.** |
 | 2 | Investigator | $20/mo | $200/yr | All weekly reports as they release (bi-weekly at launch), everything in Supporter |
-| 3 | Clearance | $35/mo founding rate (locks permanently) | $350/yr founding rate | WAITLIST ONLY AT LAUNCH. AI news feed (X keyword tracking + push notifications), private AI research assistant, personal research repository, everything in Investigator. Features deliver within 12 months of launch or founding rate extends. |
+| 3 | Clearance | **$35/mo founding rate (locks permanently). Public launch rate: $65/mo.** | $350/yr founding rate | WAITLIST ONLY AT LAUNCH. AI news feed (X keyword tracking + push notifications), private AI research assistant, personal research repository, everything in Investigator. Features deliver within 12 months of launch or founding rate extends. |
 
 **Tier notes:**
-- Supporter is a patronage tier. Primary benefit is supporting independent UAP research. Secondary benefits are early access and community status.
+- Supporter is both a patronage tier AND a conversion stepping stone. $0 → $5 → $20 is a realistic upgrade path. $0 → $20 cold is a cliff. Both tiers appear at every report gate: "Early access $5/mo" and "All reports $20/mo."
 - Community forum is open to ALL tiers including free. Supporter gets a verified forum badge.
-- Clearance shown at launch as founding waitlist. $35/month rate locks permanently when features go live. Limited founding spots.
+- Clearance shown at launch as founding waitlist. $35/month rate locks permanently when features go live. Public launch rate will be $65/mo — founding rate lock is the real scarcity (not a fabricated spot count).
 - Individual reports available a la carte at $18 each. Investigator subscription becomes obviously good value after first report.
 - Annual plans available for all paid tiers. Annual = approximately 2 months free.
+
+**Member Badge System (site UI):**
+All paying members receive a visible tier badge in the site nav (next to the Account button) and in their site profile. Badge styling:
+- CLEARANCE: red accent (`#9B1C1C`) — top tier visibility
+- INVESTIGATOR: FOIA green (`#2D5A27`) — analytical authority
+- SUPPORTER: secondary gray (`#4A4A4A`) — community member
+Badges reinforce tier identity, reduce churn, and make paying members feel differentiated from free users. Implementation: CSS attribute selectors on `data-member-tier` attribute set via HBS in `<html>` tag — zero runtime JS cost.
 
 **Report cadence:**
 - Launch cadence: bi-weekly
@@ -238,18 +245,38 @@ All badges applied via Ghost tags. Theme reads tag slugs and renders appropriate
 - Footer: document footer aesthetic with site case reference number
 
 ### Conversion Mechanics (design-stage requirement)
+
+**Full conversion funnel (SOTA 2026):**
+1. Visitor arrives → classification bar + dossier aesthetic establishes credibility immediately
+2. Newcomer block (logged-out only) → explains UAPI, shows live archive stats (N Cases / N Reports / N Library), links to methodology. Dismissible via localStorage.
+3. Reads a Case article → full, free, high-quality. Badge taxonomy visible throughout.
+4. Sees Newsletter CTA inline → copy: "Stay ahead of the next disclosure." — free subscribe. JTBD-aligned, benefit not feature.
+5. Sees Report preview at bottom of Case → title + 30-word excerpt + "INVESTIGATOR ACCESS" + $20/mo OR $18 one-time (equal prominence). First view = full card. Repeat views = compact one-liner (frequency cap via sessionStorage).
+6. Sees AI teaser band below content sections → "Clearance Tier — AI Research Assistant — Founding Rate $35/mo →"
+7. Clicks Search → logged-out → gate modal ("Create free account to search the database") → highest-intent signup touchpoint.
+8. Returns via newsletter → gets full Dispatch + teaser of upcoming Report → clicks through → Report gate shows **both Supporter ($5 early access) AND Investigator ($20 all reports)**. $18 a-la-carte equally prominent.
+9. Visits `/reports` → sees ALL reports in locked-but-visible list. Archive counter shows total ("47 REPORTS IN ARCHIVE"). Locked cards show title + 20-word excerpt behind blur overlay + "$18 this report" / "$20/mo all reports".
+10. Clicks AI nav button → gate page → capability preview with redacted example queries → founding rate lock CTA.
+
 Every free article must include:
 - Email capture (newsletter CTA) above the fold on mobile, inline after first section on desktop
-- Report preview hook at bottom of each Case article (teaser of most recent Report with paywall prompt)
-- Membership tier prompt on any content with a paywall indicator
+- Report preview hook at bottom of each Case article
+- **Two-tier gate at every report paywall: Supporter ($5 early access) + Investigator ($20 all reports) + $18 one-time purchase. All three options equally prominent.**
 - Newsletter landing page linked from nav
-- **Search gate:** Search bar visible to all. Logged-out users who trigger it see a "Create free account to search the database" modal. Primary free account acquisition driver -- visitors who want to find something specific are the highest-intent signup candidates.
+- **Search gate:** Search bar visible to all. Logged-out users who trigger it see a "Create free account to search the database" modal. Primary free account acquisition driver.
+
+**Affiliate disclosures (FTC 16 CFR Part 255 required):**
+- Library affiliate links (Amazon Associates) disclosed in Library page header and site footer
+- Any Case article with an affiliate book link: "[Affiliate]" inline label
+- Methodology page must include full affiliate disclosure policy
+
+**No advertising:** Zero ad network integrations. No Google AdSense, no programmatic. Removes ~6-10 external DNS requests and the primary source of Core Web Vitals degradation. Revenue from memberships, reports, and affiliate only.
 
 **Homepage newcomer orientation block (required):**
-Above the section grid, a single compact block that reads: what UAPI is, what the badge system means in one sentence, and a CTA to the methodology page. First-time visitors must be oriented before they hit content. Power users can ignore it.
+Above the section grid, logged-out visitors only. Compact block: what UAPI is + live archive stats (Cases/Reports/Library counts pulled live from Ghost) + methodology CTA. Dismissible (localStorage). Logged-in members never see it.
 
 **Newsletter spec:**
-The UAPI newsletter is a free bi-weekly email that contains: (1) one Dispatch roundup of the most significant UAP news since the last issue, (2) one badge-annotated Case excerpt (free), (3) a one-paragraph preview of the upcoming Report with a subscribe CTA. It is the conversion engine between free readers and Investigator subscribers. Content is distinct from the site -- it is a curated summary, not a repost.
+The UAPI newsletter is a free bi-weekly email: (1) one Dispatch roundup of the most significant UAP news since the last issue, (2) one badge-annotated Case excerpt (free), (3) a one-paragraph preview of the upcoming Report with subscribe CTA. It is the conversion engine between free readers and Investigator subscribers. Copy direction: "Stay ahead of the next disclosure." Content is distinct from the site — curated summary, not a repost.
 
 ### Cross-Index Visual Treatment
 When speculative content links to official sources (or vice versa), the link block must display:
@@ -262,15 +289,31 @@ When speculative content links to official sources (or vice versa), the link blo
 ## Navigation Structure
 
 ```
-[UAPI CLASSIFICATION HEADER — document aesthetic]
+[UAPI CLASSIFICATION HEADER — document aesthetic, context-specific text on /reports and /ai-assistant]
 
-UAPI | Cases  Reports  Dispatches  Library  Researchers  About
-
-[Search] [Subscribe]
+UAPI | Cases  Reports  Dispatches  Library  Researchers  About  |  [AI ●]  [⊕ SEARCH]  [SUBSCRIBE]
 
 [footer]
 UAP INVESTIGATIONS — CASE REF: UAPI-2026 — uapinvestigations.com — METHODOLOGY: UAPINVESTIGATIONS.COM/ABOUT
 ```
+
+**Nav zones:**
+- Left: UAPI wordmark (links to homepage)
+- Center: section links (Cases, Reports, Dispatches, Library, Researchers, About)
+- Right: action buttons — AI feature, Search, Subscribe/Account
+
+**AI button placement:** Right-side actions area, NOT in the section nav list. The AI feature is a product tier, not a content section. Visually distinct from nav links: bordered button with pulsing indicator dot.
+- For Clearance members: `[AI ●]` with pulsing red dot (live/active signal)
+- For all others: `[AI ●]` with gray dot (locked signal) → links to `/ai-assistant` FOMO gate
+
+**AI page URL:** `/ai-assistant` — Ghost Page with `custom-ai` template assigned.
+
+**Member state in nav actions (right side):**
+- Logged out: `[SUBSCRIBE]` CTA button (red, prominent)
+- Logged in: `[SUPPORTER]` / `[INVESTIGATOR]` / `[CLEARANCE]` tier badge + `[ACCOUNT]` link
+  - Tier badge rendered via CSS `data-member-tier` attribute on `<html>` — zero HBS evaluation overhead
+  - Color coding: CLEARANCE = red, INVESTIGATOR = FOIA green, SUPPORTER = gray
+  - Psychological function: reinforces identity ("I am an Investigator") → reduces churn
 
 ---
 
@@ -300,8 +343,11 @@ UAP INVESTIGATIONS — CASE REF: UAPI-2026 — uapinvestigations.com — METHODO
 | Dispatch automation | Cron + RSS → draft queue | Phase 2 |
 | Affiliate links | Amazon Associates | Phase 2 |
 | AI news feed (Clearance) | X API + keyword tracking | Phase 3 |
-| Research AI (Clearance) | Custom (trained on UAPI corpus) | Phase 3 |
+| Research AI (Clearance) | Custom RAG over UAPI corpus (OpenAI Assistants API or Perplexity API) | Phase 3 |
 | Member research repository (Clearance) | Custom | Phase 3 |
+| Font delivery | Self-hosted woff2 via @font-face in tokens.css (no Google Fonts DNS call) | Phase 1 |
+| CDN + caching | Cloudflare with Cache Rules: static assets = 1yr edge TTL, HTML = 30min edge TTL | Phase 1 |
+| AI gate page | `/ai-assistant` — Ghost Page with custom-ai.hbs template. Gate for non-Clearance, confirmation for founding Clearance. | Phase 1 |
 
 ---
 

@@ -1,6 +1,7 @@
 # UAPI Theme Build Plan
 _Last updated: 2026-02-21_
-_Reference: SITE-PLAN.md (locked), PANEL-REVIEW.md_
+_Reference: SITE-PLAN.md (locked), PANEL-REVIEW.md, PANEL-REVIEW-2.md_
+_PANEL-REVIEW-2.md: Conversion + Feature strategy vetting (UAP AI, member badges, FOMO, performance, affiliates)_
 
 ---
 
@@ -30,8 +31,9 @@ uapi-dossier/
 │
 ├── custom-library.hbs             # Library section with JS filter
 ├── custom-researchers.hbs         # Researchers directory
-├── custom-reports.hbs             # Reports archive (Investigator gate)
+├── custom-reports.hbs             # Reports archive (Investigator gate, locked-but-visible list)
 ├── custom-dispatches.hbs          # Dispatches archive
+├── custom-ai.hbs                  # AI Research Assistant — gate page for non-Clearance, confirmed state for Clearance members
 │
 ├── partials/
 │   ├── header.hbs                 # Classification header + nav
@@ -52,27 +54,38 @@ uapi-dossier/
 │
 └── assets/
     ├── css/
-    │   ├── tokens.css             # Design tokens (all CSS custom properties)
+    │   ├── tokens.css             # Design tokens + @font-face declarations (self-hosted fonts)
     │   ├── base.css               # Reset + root styles
-    │   ├── typography.css         # Font declarations + heading/body scale
+    │   ├── typography.css         # Heading/body type scale
     │   ├── layout.css             # Grid, containers, spacing
-    │   ├── header.css             # Navigation + classification bar
+    │   ├── header.css             # Navigation + classification bar + AI button + tier badge
     │   ├── footer.css             # Document footer
-    │   ├── cards.css              # All card types (case, report, dispatch, etc.)
+    │   ├── cards.css              # All card types + locked-report card overlay
     │   ├── badges.css             # Badge system (all types + colors)
     │   ├── article.css            # Single post layout + content styles
     │   ├── library.css            # Library grid + filter UI
     │   ├── researchers.css        # Researcher directory grid
     │   ├── search.css             # Search modal + overlay
-    │   ├── conversion.css         # CTA blocks, newsletter, tier prompts
+    │   ├── conversion.css         # CTA blocks, newsletter, tier prompts, newcomer block, AI teaser
+    │   ├── ai.css                 # AI page (gate + confirmed states)
     │   └── responsive.css         # All breakpoints
     │
-    └── js/
-        ├── badges.js              # Reads tag slugs, applies badge classes to cards
-        ├── library-filter.js      # Client-side multi-axis filter for Library
-        ├── search-gate.js         # Ghost member detection + search modal logic
-        ├── algolia-search.js      # Algolia InstantSearch integration
-        └── cross-index.js         # Fetch + render cross-indexed related posts
+    ├── js/
+    │   ├── badges.js              # Reads tag slugs, applies badge classes to cards + newcomer dismiss
+    │   ├── library-filter.js      # Client-side multi-axis filter for Library
+    │   ├── search-gate.js         # Ghost member detection + search modal logic
+    │   ├── algolia-search.js      # Algolia InstantSearch integration
+    │   └── cross-index.js         # Fetch + render cross-indexed related posts
+    │
+    └── fonts/                     # Self-hosted woff2 font files (no Google Fonts CDN)
+        ├── ibm-plex-mono-400.woff2
+        ├── ibm-plex-mono-500.woff2
+        ├── source-serif4-400.woff2
+        ├── source-serif4-400italic.woff2
+        ├── source-serif4-600.woff2
+        └── source-serif4-700.woff2
+        # Download from: https://google-webfonts-helper.herokuapp.com/
+        # Select IBM Plex Mono + Source Serif 4, Latin subset, woff2 only
 ```
 
 ---
