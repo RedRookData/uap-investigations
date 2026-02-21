@@ -95,7 +95,23 @@ Weekly deep-dive publications (bi-weekly at launch). Investigator tier ($20/mo) 
 
 **Individual purchase:** $18 per report. Paywall lifts 90 days after original publish date (evergreen SEO).
 
-### 5. ABOUT / METHODOLOGY
+### 5. RESEARCHERS
+Profiles directory. A curated index of notable UAP researchers, scientists, military figures, government officials, journalists, and field investigators. UAPI does not editorialize on researcher credibility here -- profiles link to their own work and let readers evaluate.
+
+**Each profile includes:**
+- Name, credentials, institutional affiliation (if any)
+- Focus areas (e.g., propulsion, government programs, historical cases, legislation)
+- Notable positions or disclosures they are associated with
+- Curated links: interviews, papers, congressional testimony, public statements
+- Cross-links to UAPI Cases that cite or analyze their work
+
+**Directory filtering:** by focus area, affiliation type (military, government, academic, independent), and active/historical.
+
+**Implementation:** Ghost pages tagged `#profile`. Directory page uses Ghost Content API to render filterable grid. Researcher names in Case articles link to their profile page.
+
+**Access:** Free to all.
+
+### 6. ABOUT / METHODOLOGY
 Static page. Launch blocker — must be complete before any content publishes.
 
 **Required content:**
@@ -247,7 +263,7 @@ When speculative content links to official sources (or vice versa), the link blo
 ```
 [UAPI CLASSIFICATION HEADER — document aesthetic]
 
-UAPI | Cases  Reports  Dispatches  Library  About
+UAPI | Cases  Reports  Dispatches  Library  Researchers  About
 
 [Search] [Subscribe]
 
@@ -278,7 +294,7 @@ UAP INVESTIGATIONS — CASE REF: UAPI-2026 — uapinvestigations.com — METHODO
 | SEO (schema, metadata, sitemap) | Theme-native | Phase 1 |
 | Library filter UI | Client-side JS | Phase 1 |
 | Community forum | TBD (Ghost comments or dedicated) | Phase 1 |
-| Site search | Ghost native search + tag filtering across Cases, Dispatches, Library | Phase 1 |
+| Site search | Algolia (free tier) — faceted search across all sections, filterable by badge, date, incident type, geographic region, evidence quality simultaneously. Ghost native search as fallback. | Phase 1 |
 | Analytics | Ghost built-in + Plausible | Phase 2 |
 | Dispatch automation | Cron + RSS → draft queue | Phase 2 |
 | Affiliate links | Amazon Associates | Phase 2 |
@@ -311,7 +327,9 @@ UAP INVESTIGATIONS — CASE REF: UAPI-2026 — uapinvestigations.com — METHODO
 - [ ] Report preview hooks integrated into theme
 - [ ] About/Methodology page complete
 - [ ] Community forum set up with moderation tools
-- [ ] Seed content: 5-10 Cases, 10+ Library entries, 5 Dispatches
+- [ ] Algolia search integration (index all content, faceted filters)
+- [ ] Researcher profiles directory template built
+- [ ] Seed content: 5-10 Cases, 10+ Library entries, 5 Dispatches, 10+ Researcher profiles
 
 ### Phase 2 — Monetization and Growth
 - [ ] First bi-weekly report published
