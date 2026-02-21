@@ -36,8 +36,8 @@ buildExpired = false
   [params.label]
     text = " "
     icon = "/logo.png"
-    iconHeight = 200
-    iconWidth = 450
+    iconHeight = 120
+    iconWidth = 270
 
   [params.homeInfoParams]
     Title = "Primary Source UAP Research"
