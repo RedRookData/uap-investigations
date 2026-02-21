@@ -29,7 +29,7 @@ body {
 .nav {
     background: #ffffff;
     border-bottom: 1px solid var(--border);
-    padding: 0 24px;
+    padding: 8px 24px;
 }
 
 .logo {
@@ -47,10 +47,15 @@ body {
 }
 
 .logo img {
-    height: 80px;
+    height: 160px;
     width: auto;
-    max-width: 300px;
+    max-width: 380px;
     object-fit: contain;
+    padding: 12px 0;
+}
+
+.logo {
+    padding: 8px 0;
 }
 
 /* Hide text label next to logo -- logo already contains site name */
