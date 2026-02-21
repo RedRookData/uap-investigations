@@ -40,7 +40,7 @@ buildExpired = false
     iconWidth = 280
 
   [params.homeInfoParams]
-    Title = "UAP Investigations"
+    Title = "Primary Source UAP Research"
     Content = """
 Primary source research into Unidentified Aerial Phenomena.
 
