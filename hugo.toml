@@ -15,8 +15,8 @@ buildExpired = false
   keywords = ["UAP", "UFO", "unidentified aerial phenomena", "disclosure", "FOIA", "declassified", "Pentagon", "AARO", "government", "investigation"]
   author = "UAP Investigations"
   DateFormat = "January 2, 2006"
-  defaultTheme = "dark"
-  disableThemeToggle = false
+  defaultTheme = "light"
+  disableThemeToggle = true
   ShowReadingTime = true
   ShowShareButtons = false
   ShowPostNavLinks = true
@@ -32,6 +32,11 @@ buildExpired = false
   hideSummary = false
   showtoc = true
   tocopen = false
+
+  [params.label]
+    text = "UAP Investigations"
+    icon = "/logo.png"
+    iconHeight = 48
 
   [params.homeInfoParams]
     Title = "UAP Investigations"
