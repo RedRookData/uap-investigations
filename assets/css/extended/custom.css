@@ -47,10 +47,21 @@ body {
 }
 
 .logo img {
-    height: 55px;
+    height: 80px;
     width: auto;
-    max-width: 220px;
+    max-width: 300px;
     object-fit: contain;
+}
+
+/* Hide text label next to logo -- logo already contains site name */
+.logo a span,
+.logo a:not(:has(img)) {
+    display: none !important;
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
 }
 
 #menu a {
