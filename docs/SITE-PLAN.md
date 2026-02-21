@@ -5,7 +5,7 @@ _See PANEL-REVIEW.md for full expert analysis and change rationale._
 ---
 
 ## Mission
-UAP Investigations (UAPI) is an independent research and analysis platform covering UAP/UFO phenomena. UAPI does not break news — it synthesizes, contextualizes, and evaluates existing information using a transparent badge system to signal source quality. The platform analyzes the full spectrum from official government records to speculative claims. The badge system tells readers exactly what they are looking at. Editorial judgment is visible by design.
+UAP Investigations (UAPI) is an independent research and analysis platform. UAPI investigates, contextualizes, and evaluates UAP phenomena across the full spectrum -- from official government records and sensor data to speculative claims and fringe sources. Every piece of content is badged by evidence quality and source type so readers know exactly what they are looking at. Editorial judgment is transparent by design.
 
 **Differentiation from existing databases (NUFORC, Black Vault, MUFON):** Those platforms archive raw reports. UAPI analyzes them -- cross-indexing official records against speculative claims, grading evidence quality, and tracing the chain of sourcing. A researcher can follow a claim from its origin to every downstream citation. No existing UAP platform does this systematically. That is the asymmetric advantage.
 
@@ -99,7 +99,7 @@ Weekly deep-dive publications (bi-weekly at launch). Investigator tier ($20/mo) 
 Static page. Launch blocker — must be complete before any content publishes.
 
 **Required content:**
-- What UAPI is and is not ("We analyze. We do not report.")
+- What UAPI is and does ("We investigate, analyze, and evaluate -- across the full spectrum of evidence.")
 - Badge system criteria — specific enough that a third party could audit a badge assignment
 - What each evidence quality badge means (exact sourcing standard for CORROBORATED, RADAR CONFIRMED, etc.)
 - What each source type tag means (exact definition for ANONYMOUS GOVERNMENT SOURCE, FOIA RELEASE, etc.)
@@ -252,8 +252,7 @@ UAPI | Cases  Reports  Dispatches  Library  About
 [Search] [Subscribe]
 
 [footer]
-UAP INVESTIGATIONS — CASE REF: UAPI-2026 — uapinvestigations.com
-ALL EDITORIAL TAGS ARE UAPI CHARACTERIZATIONS — SEE METHODOLOGY
+UAP INVESTIGATIONS — CASE REF: UAPI-2026 — uapinvestigations.com — METHODOLOGY: UAPINVESTIGATIONS.COM/ABOUT
 ```
 
 ---
