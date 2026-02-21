@@ -1,0 +1,11 @@
+{
+  "stage": 1,
+  "status": "pending",
+  "retries": 0,
+  "max_retries": 3,
+  "completed_stages": [],
+  "last_error": "",
+  "last_updated": "",
+  "build_complete": false,
+  "completion_announced": false
+}

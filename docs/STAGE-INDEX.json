@@ -1,0 +1,16 @@
+{
+  "plan_file": "C:\\Users\\redro\\.openclaw\\workspace\\projects\\uap-platform\\IMPL-PLAN-FINAL.md",
+  "theme_dir": "C:\\Users\\redro\\.openclaw\\workspace\\projects\\uap-platform\\ghost-theme\\uapi-dossier",
+  "stages": {
+    "1":  { "start": 193, "lines": 635, "description": "Core Shell — package.json, tokens.css, base/type/layout/header/footer CSS, default.hbs, header.hbs, footer.hbs, error.hbs" },
+    "2":  { "start": 828, "lines": 223, "description": "Badge System — badges.js (complete), badges.css" },
+    "3":  { "start": 1050, "lines": 234, "description": "Card Partials — cards.css, card-case/report/dispatch/library/researcher.hbs" },
+    "4":  { "start": 1283, "lines": 378, "description": "Homepage — conversion.css, newcomer-block.hbs, newsletter-cta.hbs, index.hbs" },
+    "5":  { "start": 1660, "lines": 257, "description": "Article + Partials — article.css, tier-prompt.hbs, report-preview.hbs, cross-index.hbs, post.hbs, page.hbs, tag.hbs" },
+    "6":  { "start": 1916, "lines": 244, "description": "Archives + AI — custom-reports.hbs, custom-dispatches.hbs, custom-ai.hbs, ai.css" },
+    "7":  { "start": 2159, "lines": 89,  "description": "Library + Researchers — custom-library.hbs, custom-researchers.hbs, library.css, researchers.css, library-filter.js stub" },
+    "8":  { "start": 2247, "lines": 278, "description": "Search — search-modal.hbs, search-gate.js, algolia-search.js, search.css" },
+    "9":  { "start": 2524, "lines": 132, "description": "Responsive + Polish — responsive.css, skip link addition to header.hbs" },
+    "10": { "start": 2655, "lines": 297, "description": "Deploy — zip theme, upload via Ghost Admin API, activate" }
+  }
+}
