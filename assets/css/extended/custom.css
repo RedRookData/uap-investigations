@@ -26,10 +26,14 @@ body {
 }
 
 /* Header / Nav */
+.header {
+    padding: 0 !important;
+}
+
 .nav {
     background: #ffffff;
     border-bottom: 1px solid var(--border);
-    padding: 4px 24px;
+    padding: 2px 24px;
 }
 
 .logo {
@@ -47,15 +51,16 @@ body {
 }
 
 .logo img {
-    height: 120px;
+    height: 200px;
     width: auto;
-    max-width: 290px;
+    max-width: 480px;
     object-fit: contain;
-    padding: 6px 0;
+    padding: 7px 0;
 }
 
 .logo {
     padding: 4px 0;
+    line-height: 0;
 }
 
 /* Hide text label next to logo -- logo already contains site name */
