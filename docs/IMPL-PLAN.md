@@ -122,35 +122,44 @@ Original sequence had Library + Researchers (Stage 5) before Conversion Mechanic
 :root {
   /* ── Colors ────────────────────────────── */
   --c-bg:           #F4F1EA;   /* parchment background */
-  --c-surface:      #EDEAE0;   /* card surfaces */
-  --c-surface-deep: #E5E2D8;   /* deeper card / hover */
-  --c-text:         #1A1A1A;   /* primary text */
-  --c-text-2:       #4A4A4A;   /* secondary text */
-  --c-text-3:       #7A7570;   /* tertiary / labels */
-  --c-accent:       #9B1C1C;   /* red accent (ONGOING, links, CTAs) */
+  --c-surface:      #E6E2D6;   /* card surfaces — PATCHED: was #EDEAE0, too close to bg on budget screens */
+  --c-surface-deep: #DAD6CA;   /* card hover — deepened to match new surface */
+  --c-text:         #1A1A1A;   /* primary text — contrast vs bg: ~15.8:1 ✓ */
+  --c-text-2:       #4A4A4A;   /* secondary text — contrast vs bg: ~7.2:1 ✓ */
+  --c-text-3:       #696560;   /* tertiary — PATCHED: was #7A7570 (4.2:1, fails AA at 11px); now ~4.8:1 ✓ */
+  --c-accent:       #9B1C1C;   /* red accent — contrast vs bg: ~7.5:1 ✓ */
   --c-accent-light: #F5E8E8;   /* red tint for hover states */
-  --c-border:       #C8C4B8;   /* standard borders */
-  --c-border-light: #DDD9CE;   /* lighter borders */
-  --c-foia:         #2D5A27;   /* FOIA / DECLASSIFIED green */
+  --c-accent-hover: #7A1515;   /* darker red for hover on accent elements */
+  --c-border:       #C0BBB0;   /* standard borders — slightly deepened to match new card surface */
+  --c-border-light: #D5D1C6;   /* lighter borders */
+  --c-foia:         #2D5A27;   /* FOIA / DECLASSIFIED green — contrast vs bg: ~8.1:1 ✓ */
   --c-cold:         #2C4A6E;   /* COLD CASE blue */
-  --c-pending:      #8B6914;   /* PENDING amber */
-  --c-closed:       #4A4A4A;   /* CLOSED gray (same as text-2) */
-  --c-badge-bg:     #E0DDD4;   /* evidence/source badge bg */
+  --c-pending:      #7A5A10;   /* PENDING amber — PATCHED: was #8B6914 (4.7:1 borderline); now ~5.2:1 ✓ */
+  --c-closed:       #4A4A4A;   /* CLOSED gray */
+  --c-badge-bg:     #DBD8CE;   /* evidence/source badge bg — adjusted for new surface */
+  --c-focus:        #9B1C1C;   /* focus ring color — same as accent for consistency */
+  --c-visited:      #6B3A3A;   /* visited link color — muted red so read content is subtly distinct */
 
   /* ── Typography ─────────────────────────── */
   --f-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --f-mono:  'IBM Plex Mono', 'Courier New', Courier, monospace;
 
-  /* ── Type scale ─────────────────────────── */
-  --t-xs:   0.6875rem;   /* 11px -- badge labels */
-  --t-sm:   0.75rem;     /* 12px -- metadata */
-  --t-base: 1rem;        /* 16px */
-  --t-md:   1.0625rem;   /* 17px -- body copy */
-  --t-lg:   1.25rem;     /* 20px -- card titles */
-  --t-xl:   1.5rem;      /* 24px */
-  --t-2xl:  2rem;        /* 32px */
-  --t-3xl:  2.5rem;      /* 40px -- article headline */
-  --t-4xl:  3.25rem;     /* 52px -- hero */
+  /* ── Type scale (PATCHED: removed redundant 17px stop — 16px/17px invisible difference) ── */
+  --t-xs:   0.6875rem;  /* 11px  — badge labels, classification stamps */
+  --t-sm:   0.8125rem;  /* 13px  — metadata, card footer, bylines */
+  --t-base: 1rem;       /* 16px  — UI labels, nav, buttons */
+  --t-body: 1.125rem;   /* 18px  — article body (was 17px — bumped for readability) */
+  --t-lg:   1.25rem;    /* 20px  — card titles */
+  --t-xl:   1.5rem;     /* 24px  — section headers */
+  --t-2xl:  2rem;       /* 32px  — page titles */
+  --t-3xl:  2.75rem;    /* 44px  — article headlines */
+  --t-4xl:  3.5rem;     /* 56px  — hero / homepage feature */
+
+  /* ── Line heights ────────────────────────── */
+  --lh-tight:  1.2;    /* headlines */
+  --lh-snug:   1.4;    /* card titles, short text */
+  --lh-normal: 1.6;    /* card excerpts, UI text */
+  --lh-loose:  1.75;   /* article body — optimal for serif at 18px */
 
   /* ── Spacing ────────────────────────────── */
   --sp-1:  0.25rem;
@@ -168,13 +177,17 @@ Original sequence had Library + Researchers (Stage 5) before Conversion Mechanic
 
   /* ── Layout ─────────────────────────────── */
   --w-max:     1100px;
-  --w-content: 720px;
+  --w-content: min(720px, 65ch);  /* PATCHED: 65ch = font-relative optimal reading width (~65 chars) */
   --w-narrow:  560px;
 
   /* ── Borders ────────────────────────────── */
-  --bw:          1px;
-  --radius:      0;       /* NO rounded corners. Document aesthetic. */
-  --status-bar:  4px;     /* Left border on cards for case status */
+  --bw:              1px;
+  --radius:          0;    /* NO rounded corners. Document aesthetic. */
+  --status-bar:      4px;  /* Left border on cards */
+  --status-bar-art:  6px;  /* Left border on article pages — more prominent */
+
+  /* ── Touch targets ────────────────────────── */
+  --touch-min: 44px;   /* WCAG 2.5.5 minimum touch target size */
 
   /* ── Transitions ────────────────────────── */
   --ease: cubic-bezier(0.2, 0, 0.4, 1);
@@ -611,11 +624,17 @@ For article (post.hbs), also add:
   color: var(--c-text-2);
 }
 
-/* ── Card status borders ── */
-.card--ongoing  { border-left-color: var(--c-accent) !important; }
-.card--closed   { border-left-color: var(--c-closed) !important; }
-.card--cold     { border-left-color: var(--c-cold) !important; }
-.card--pending  { border-left-color: var(--c-pending) !important; }
+/* ── Card status borders (PATCHED: removed !important — same specificity, escalation trap) ── */
+.card--ongoing  { border-left-color: var(--c-accent); }
+.card--closed   { border-left-color: var(--c-closed); }
+.card--cold     { border-left-color: var(--c-cold); }
+.card--pending  { border-left-color: var(--c-pending); }
+
+/* Article page: status bar is thicker (more prominent, primary design element) */
+.article--ongoing  { border-left: var(--status-bar-art) solid var(--c-accent); }
+.article--closed   { border-left: var(--status-bar-art) solid var(--c-closed); }
+.article--cold     { border-left: var(--status-bar-art) solid var(--c-cold); }
+.article--pending  { border-left: var(--status-bar-art) solid var(--c-pending); }
 
 /* ── Empty badge container fix (Strategy Patch) ── */
 /* If a post has no classification tag, stamp div is empty — collapse it */
@@ -757,6 +776,345 @@ Revised card ID line:
 ```
 
 **Stage 2 test:** Add one test post with a few badge tags. Cards should render with correct badge colors, stamps, and status border. Open browser devtools and verify `card--ongoing` class is being added by `badges.js`.
+
+---
+
+## CSS Design Patches (Pass 4 — Engagement + Accessibility)
+
+Add these to the appropriate CSS files during build. All are new additions not in earlier stages.
+
+### `assets/css/base.css` — Focus states (WCAG 2.1 AA, REQUIRED)
+```css
+/* Focus states — must be visible, never remove outline */
+:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 3px;
+}
+
+/* Visited links — let users know what they've read */
+.card__title a:visited,
+.article a:visited,
+.cross-index__item a:visited {
+  color: var(--c-visited);
+}
+
+/* Minimum touch targets — all interactive elements */
+a, button, input, select, textarea, [role="button"] {
+  min-height: var(--touch-min);  /* 44px */
+}
+/* Exception: inline text links don't need 44px height */
+p a, li a, .badge a, .card__meta a {
+  min-height: unset;
+}
+
+/* Transition specificity fix — never use transition:all */
+.search-trigger {
+  transition:
+    border-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease);
+}
+.btn--subscribe {
+  transition: background-color var(--t-fast) var(--ease),
+              opacity var(--t-fast) var(--ease);
+}
+.card {
+  transition: background-color var(--t-fast) var(--ease);
+}
+.site-nav__links a {
+  transition: color var(--t-fast) var(--ease);
+}
+```
+
+### `assets/css/article.css` — Body typography and layout
+```css
+.article__body {
+  font-family: var(--f-serif);
+  font-size: var(--t-body);      /* 18px */
+  line-height: var(--lh-loose);  /* 1.75 — optimal for serif at 18px */
+  color: var(--c-text);
+  max-width: var(--w-content);   /* min(720px, 65ch) — font-relative optimal */
+}
+
+.article__body p { margin-bottom: var(--sp-6); }
+.article__body h2 { font-size: var(--t-xl); margin: var(--sp-10) 0 var(--sp-4); }
+.article__body h3 { font-size: var(--t-lg); margin: var(--sp-8) 0 var(--sp-3); }
+.article__body blockquote {
+  border-left: var(--status-bar) solid var(--c-border);
+  padding-left: var(--sp-6);
+  color: var(--c-text-2);
+  font-style: italic;
+  margin: var(--sp-8) 0;
+}
+.article__body a { color: var(--c-accent); text-decoration: underline; }
+.article__body a:hover { color: var(--c-accent-hover); }
+.article__body a:visited { color: var(--c-visited); }
+
+/* Reading progress bar */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--c-accent);
+  width: 0%;
+  z-index: 200;
+  transition: width 100ms linear;
+}
+```
+
+Add reading progress JS (in `badges.js` or separate `article.js`):
+```javascript
+// Reading progress bar
+var progressBar = document.querySelector('.reading-progress');
+var article = document.querySelector('.article__body');
+if (progressBar && article) {
+  window.addEventListener('scroll', function() {
+    var rect = article.getBoundingClientRect();
+    var total = article.offsetHeight - window.innerHeight;
+    var scrolled = -rect.top;
+    var pct = Math.max(0, Math.min(100, (scrolled / total) * 100));
+    progressBar.style.width = pct + '%';
+  }, { passive: true });
+}
+```
+
+Add to `default.hbs` (inside `<body>`, before header):
+```handlebars
+{{#is "post"}}<div class="reading-progress" role="progressbar" aria-label="Reading progress"></div>{{/is}}
+```
+
+### Badge priority elevation (primary evidence badge in meta row)
+Add `priority` field to `BADGE_MAP` in `badges.js`. Higher number = higher priority. The highest-priority evidence badge in the post also gets `.badge--primary` class and is injected into `.card__meta` alongside the date:
+
+```javascript
+// Inside BADGE_MAP evidence entries, add priority:
+'hash-ev-physical':         { type: 'evidence', label: 'PHYSICAL EVIDENCE', priority: 9 },
+'hash-ev-radar':            { type: 'evidence', label: 'RADAR CONFIRMED',    priority: 8 },
+'hash-ev-corroborated':     { type: 'evidence', label: 'CORROBORATED',       priority: 7 },
+'hash-ev-disputed':         { type: 'evidence', label: 'DISPUTED',           priority: 6 },
+'hash-ev-uncorroborated':   { type: 'evidence', label: 'UNCORROBORATED',     priority: 5 },
+'hash-ev-single-source':    { type: 'evidence', label: 'SINGLE-SOURCE',      priority: 4 },
+'hash-ev-anonymous-report': { type: 'evidence', label: 'ANONYMOUS REPORT',   priority: 3 },
+'hash-ev-primary-witness':  { type: 'evidence', label: 'PRIMARY WITNESS',    priority: 2 },
+'hash-ev-alleged':          { type: 'evidence', label: 'ALLEGED',            priority: 1 },
+```
+
+In `processBadges()`, after collecting all evidence badges, find the highest priority and mark it:
+```javascript
+// After the main forEach, find and elevate primary evidence badge
+var evidenceBadges = el.querySelectorAll('.badge--evidence');
+var highestPriority = 0;
+var primaryBadge = null;
+evidenceBadges.forEach(function(b) {
+  var slug = Array.from(b.classList).find(function(c) { return c.startsWith('badge--hash-ev-'); });
+  var entry = slug ? BADGE_MAP[slug.replace('badge--', '')] : null;
+  if (entry && entry.priority > highestPriority) {
+    highestPriority = entry.priority;
+    primaryBadge = b;
+  }
+});
+if (primaryBadge) {
+  primaryBadge.classList.add('badge--primary');
+  var metaEl = el.querySelector('.card__meta, .article__meta');
+  if (metaEl) metaEl.appendChild(primaryBadge.cloneNode(true));
+}
+```
+
+CSS for primary badge in meta:
+```css
+.card__meta .badge--primary,
+.article__meta .badge--primary {
+  font-size: var(--t-xs);
+  padding: 1px 5px;
+  margin-left: auto;  /* pushes to right side of meta row */
+  border: 1px solid currentColor;
+}
+/* Primary badge color by evidence level */
+.badge--hash-ev-radar.badge--primary,
+.badge--hash-ev-physical.badge--primary    { color: var(--c-foia); border-color: var(--c-foia); }
+.badge--hash-ev-corroborated.badge--primary { color: var(--c-text-2); }
+.badge--hash-ev-disputed.badge--primary     { color: var(--c-pending); border-color: var(--c-pending); }
+.badge--hash-ev-alleged.badge--primary,
+.badge--hash-ev-uncorroborated.badge--primary { color: var(--c-text-3); }
+```
+
+### Mobile navigation (LAUNCH BLOCKER — must be in Stage 1, not deferred)
+```handlebars
+{{! Add to header.hbs — hamburger button }}
+<button class="nav-toggle" aria-label="Open navigation" aria-expanded="false" type="button">
+  <span class="nav-toggle__bar"></span>
+  <span class="nav-toggle__bar"></span>
+  <span class="nav-toggle__bar"></span>
+</button>
+```
+
+```css
+/* Mobile nav overlay */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--c-text);
+  color: var(--c-bg);
+  z-index: 200;
+  padding: var(--sp-8) var(--sp-6);
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+.nav-overlay.is-open { display: flex; }
+.nav-overlay__links a {
+  font-family: var(--f-mono);
+  font-size: var(--t-2xl);
+  color: var(--c-bg);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+  padding: var(--sp-4) 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.nav-overlay__close {
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.15em;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: var(--c-bg);
+  padding: var(--sp-2) var(--sp-4);
+  align-self: flex-end;
+  cursor: pointer;
+  min-height: var(--touch-min);
+}
+```
+
+```javascript
+// Mobile nav toggle (add to badges.js or separate nav.js)
+var navToggle = document.querySelector('.nav-toggle');
+var navOverlay = document.querySelector('.nav-overlay');
+var navClose = document.querySelector('.nav-overlay__close');
+if (navToggle && navOverlay) {
+  navToggle.addEventListener('click', function() {
+    navOverlay.classList.add('is-open');
+    navToggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  });
+  if (navClose) navClose.addEventListener('click', closeNav);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
+  function closeNav() {
+    navOverlay.classList.remove('is-open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+}
+```
+
+### `assets/css/responsive.css` — Mobile-specific additions
+```css
+/* Mobile: classification bar shortened */
+@media (max-width: 639px) {
+  .classification-bar__text::before { content: 'UAPI // UNCLASSIFIED'; }
+  .classification-bar__text { font-size: 0; } /* hide full text */
+  .classification-bar__text::before { font-size: var(--t-xs); }
+
+  /* Mobile nav: hide desktop links, show toggle */
+  .site-nav__links { display: none; }
+  .nav-toggle { display: flex; flex-direction: column; gap: 4px;
+    background: none; border: none; cursor: pointer;
+    padding: var(--sp-2); min-height: var(--touch-min);
+    min-width: var(--touch-min); align-items: center; justify-content: center; }
+  .nav-toggle__bar { width: 20px; height: 1.5px; background: var(--c-text); }
+
+  /* Mobile search: single column layout */
+  .search-overlay__inner { flex-direction: column; padding: var(--sp-4); }
+  .search-filters { display: none; }  /* hidden by default on mobile */
+  .search-filters.is-open { display: block; }
+  #hits { width: 100%; }
+  .search-filter-toggle {
+    display: block;
+    font-family: var(--f-mono);
+    font-size: var(--t-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--c-border);
+    padding: var(--sp-2) var(--sp-4);
+    margin-bottom: var(--sp-4);
+    min-height: var(--touch-min);
+    cursor: pointer;
+  }
+
+  /* Mobile newsletter: stack input + button */
+  .newsletter-cta__form { flex-direction: column; }
+  .newsletter-cta__input,
+  .newsletter-cta__form .btn--subscribe { width: 100%; }
+
+  /* Mobile article stamp: inline, not absolute */
+  .article__stamp { position: static; margin-bottom: var(--sp-3); }
+
+  /* Mobile footer: stack vertically */
+  .site-footer__stamp { font-size: var(--t-xs); text-align: center; margin-top: var(--sp-4); }
+  .site-footer__links { flex-direction: column; gap: var(--sp-3); text-align: center; }
+
+  /* Mobile: hide desktop-only right padding on card title */
+  .card__title { padding-right: var(--sp-8); } /* reduced from sp-16 */
+}
+
+/* Desktop: hide mobile nav toggle */
+@media (min-width: 640px) {
+  .nav-toggle { display: none; }
+  .search-filter-toggle { display: none; }
+}
+```
+
+### Empty states for all section grids
+Add to each section template when `{{#foreach}}` yields no results:
+```handlebars
+{{#foreach posts}}
+  {{> "card-case"}}
+{{else}}
+  <div class="section-empty">
+    <span class="section-empty__label">NO RECORDS FILED</span>
+    <p class="section-empty__sub">Check back soon.</p>
+  </div>
+{{/foreach}}
+```
+
+CSS:
+```css
+.section-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--sp-16) var(--sp-4);
+  font-family: var(--f-mono);
+  border: 1px dashed var(--c-border);
+}
+.section-empty__label {
+  display: block;
+  font-size: var(--t-sm);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--c-text-3);
+  margin-bottom: var(--sp-3);
+}
+```
+
+### Conditional stamp clearance on card title
+Only apply right padding when a classification badge is actually injected. `badges.js` adds `.has-stamp` class to the card when a classification badge is found:
+
+```javascript
+// In processBadges(), when a classification badge is injected:
+if (badge.type === 'classification' && stampEl) {
+  stampEl.appendChild(makeBadge(badge.label, 'classification', slug));
+  el.classList.add('has-stamp');  // ← ADD THIS
+  return;
+}
+```
+
+```css
+/* Only reserve title clearance when stamp exists */
+.card__title { padding-right: var(--sp-4); }  /* default: no clearance */
+.card.has-stamp .card__title { padding-right: var(--sp-16); }  /* clearance only when stamp present */
+```
 
 ---
 
@@ -1524,7 +1882,13 @@ Collisions=5 Tribunal=11. All passed. Badge JS post-processing noted as architec
 
 All 11: PASS. Build is clean.
 
-Vetting Log: Pass1 Collisions=5 Tribunal=11 | Pass2 Bugs=8 Fixed=8 Tribunal=11 | Pass3 Strategy Collisions=5 Thunderdome=5 Panel=6 | Polish=pass | Status: READY TO BUILD
+Vetting Log: Pass1 Collisions=5 Tribunal=11 | Pass2 Bugs=8 Fixed=8 Tribunal=11 | Pass3 Strategy Collisions=5 Thunderdome=5 Panel=6 | Pass4 CSS/Engagement Panel=6 Thunderdome=6 | Polish=pass | Status: READY TO BUILD
+
+**Pass 4 Summary (CSS + Engagement Design):**
+Tokens: card surface darkened (#E6E2D6) for budget screen visibility; tertiary color fixed for WCAG AA (#696560); pending amber darkened for contrast; redundant type scale stops removed; body type bumped to 18px; line-height system added; w-content changed to min(720px, 65ch); status-bar-art token added (6px for article, 4px for cards); touch-min token added (44px); focus color and visited color tokens added.
+CSS: !important removed from status borders; transition:all replaced with specific properties everywhere; focus states added (WCAG 2.1 AA); visited link states added; article body typography specified (18px/1.75lh); reading progress bar added; article body line-height and block element spacing specified.
+Engagement: Primary evidence badge elevated to meta row with priority system in BADGE_MAP; conditional stamp clearance (has-stamp class only applied when stamp actually exists); badge category differentiation in meta row with color coding.
+Mobile: Classification bar shortened for mobile; mobile nav overlay added as Stage 1 LAUNCH BLOCKER; search single-column layout on mobile; newsletter form stacks on mobile; article stamp repositioned inline on mobile; footer stacks on mobile; empty states added for all section grids.
 
 **Pass 3 Summary (Logic + Strategy):**
 - Build sequence reordered: Conversion Mechanics and Search now Stages 5-6, Library/Researchers deprioritized to 7-8
