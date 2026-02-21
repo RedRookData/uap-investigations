@@ -33,7 +33,7 @@ body {
 .nav {
     background: #ffffff;
     border-bottom: 1px solid var(--border);
-    padding: 2px 24px;
+    padding: 0 24px;
 }
 
 .logo {
@@ -51,15 +51,15 @@ body {
 }
 
 .logo img {
-    height: 200px;
+    height: 160px;
     width: auto;
-    max-width: 480px;
+    max-width: 380px;
     object-fit: contain;
-    padding: 7px 0;
+    padding: 3px 0;
 }
 
 .logo {
-    padding: 4px 0;
+    padding: 2px 0;
     line-height: 0;
 }
 
