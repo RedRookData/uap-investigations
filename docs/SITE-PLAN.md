@@ -243,6 +243,7 @@ Every free article must include:
 - Report preview hook at bottom of each Case article (teaser of most recent Report with paywall prompt)
 - Membership tier prompt on any content with a paywall indicator
 - Newsletter landing page linked from nav
+- **Search gate:** Search bar visible to all. Logged-out users who trigger it see a "Create free account to search the database" modal. Primary free account acquisition driver -- visitors who want to find something specific are the highest-intent signup candidates.
 
 **Homepage newcomer orientation block (required):**
 Above the section grid, a single compact block that reads: what UAPI is, what the badge system means in one sentence, and a CTA to the methodology page. First-time visitors must be oriented before they hit content. Power users can ignore it.
@@ -294,7 +295,7 @@ UAP INVESTIGATIONS — CASE REF: UAPI-2026 — uapinvestigations.com — METHODO
 | SEO (schema, metadata, sitemap) | Theme-native | Phase 1 |
 | Library filter UI | Client-side JS | Phase 1 |
 | Community forum | TBD (Ghost comments or dedicated) | Phase 1 |
-| Site search | Algolia (free tier) — faceted search across all sections, filterable by badge, date, incident type, geographic region, evidence quality simultaneously. Ghost native search as fallback. | Phase 1 |
+| Site search | Algolia (free tier) — faceted search across all sections, filterable by badge, date, incident type, geographic region, evidence quality simultaneously. Ghost native search as fallback. **Gated: free account required to search.** Logged-out users who trigger search see a "Create free account to search the database" modal. Ghost member detection handles this in theme JS. | Phase 1 |
 | Analytics | Ghost built-in + Plausible | Phase 2 |
 | Dispatch automation | Cron + RSS → draft queue | Phase 2 |
 | Affiliate links | Amazon Associates | Phase 2 |
