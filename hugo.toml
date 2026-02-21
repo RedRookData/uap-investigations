@@ -34,9 +34,10 @@ buildExpired = false
   tocopen = false
 
   [params.label]
-    text = "UAP Investigations"
+    text = ""
     icon = "/logo.png"
-    iconHeight = 48
+    iconHeight = 55
+    iconWidth = 200
 
   [params.homeInfoParams]
     Title = "UAP Investigations"
